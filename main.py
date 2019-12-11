@@ -17,6 +17,8 @@ pygame.display.set_caption("Красная ветка")
 pygame.mouse.set_visible(0)
 clock = pygame.time.Clock()
 
+startMenuSprites = pygame.sprite.Group()
+
 
 def load_image(name, colorKey=None):
     fullname = os.path.join('images', name)
@@ -44,18 +46,25 @@ def draw_cursor(x, y):
 
 
 def start_screen():
-    introText = ["Красная ветка", "",
+    def draw_buttons():
+        # Parameters:             surface, color,      x,   y, length,height, width, text,text_color
+        redLineButton.create_button(screen, (255, 1, 0), 326, 77, 715, 117, 0, introText[0], (255, 204, 0))
+        startButton.create_button(screen, (255, 1, 0), 533, 345, 300, 70, 0, introText[1], (0, 0, 0))
+        settingsButton.create_button(screen, (255, 1, 0), 533, 468, 300, 70, 0, introText[2], (0, 0, 0))
+        exitButton.create_button(screen, (255, 1, 0), 533, 605, 300, 70, 0, introText[3], (0, 0, 0))
+
+    introText = ["Красная ветка",
                  "Старт",
                  "Настройки",
                  "Выход"]
 
-    fon = pygame.transform.scale(load_image('fon.jpg'), (WIDTH, HEIGHT))
-    screen.blit(fon, (0, 0))
-    fontBig = pygame.font.Font("Roboto-Black.ttf", 96)
-    fontMiddle = pygame.font.Font("Roboto-Black.ttf", 48)
+    fon = Fon()
+    redLineButton = Button()
     startButton = Button()
     settingsButton = Button()
     exitButton = Button()
+    draw_buttons()
+
     runningStartScreen = True
 
     while runningStartScreen:
@@ -64,12 +73,21 @@ def start_screen():
                 runningStartScreen = False
                 terminate()
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if startButton.pressed(pygame.mouse.get_pos()):
-                    return
-                elif settingsButton.pressed(pygame.mouse.get_pos()):
-                    pass
-                elif exitButton.pressed(pygame.mouse.get_pos()):
-                    terminate()
+                if event.button == 1:
+                    if redLineButton.pressed(pygame.mouse.get_pos()):
+                        pass
+                    elif startButton.pressed(pygame.mouse.get_pos()):
+                        return
+                    elif settingsButton.pressed(pygame.mouse.get_pos()):
+                        pass
+                    elif exitButton.pressed(pygame.mouse.get_pos()):
+                        terminate()
+        screen.fill(pygame.Color("black"))
+        startMenuSprites.draw(screen)
+        startMenuSprites.update()
+        draw_buttons()
+        if pygame.mouse.get_focused():
+            draw_cursor(*pygame.mouse.get_pos())
         pygame.display.flip()
         clock.tick(FPS)
 
@@ -83,7 +101,7 @@ class Button:
 
     def write_text(self, surface, text, text_color, length, height, x, y):
         font_size = int(length // len(text))
-        myFont = pygame.font.SysFont("Calibri", font_size)
+        myFont = pygame.font.Font("Roboto-Black.ttf", font_size)
         myText = myFont.render(text, 1, text_color)
         surface.blit(myText, ((x + length / 2) - myText.get_width() / 2, (y + height / 2) - myText.get_height() / 2))
         return surface
@@ -119,7 +137,21 @@ class Button:
             return False
 
 
-# start_screen()
+class Fon(pygame.sprite.Sprite):
+    image = pygame.transform.scale(pygame.image.load("images/fon.jpg"), (2000, 2000))
+
+    def __init__(self):
+        super().__init__(startMenuSprites)
+        self.image = Fon.image
+        self.rect = Fon.image.get_rect()
+        self.rect.left = -634
+
+    def update(self):
+        if self.rect.left < 0:
+            self.rect.left += 1
+
+
+start_screen()
 running = True
 while running:
 
