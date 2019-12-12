@@ -10,11 +10,13 @@ FPS = 50
 WIDTH = 1366
 HEIGHT = 768
 # STEP = 10
+TIMEBETWEENSTATIONS = 150000
 CURSOR = pygame.image.load("images/cursor.png")
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Красная ветка")
 pygame.mouse.set_visible(0)
+pygame.time.set_timer(pygame.USEREVENT, TIMEBETWEENSTATIONS)
 clock = pygame.time.Clock()
 
 startMenuSprites = pygame.sprite.Group()
@@ -45,42 +47,69 @@ def draw_cursor(x, y):
     screen.blit(CURSOR, (x, y))
 
 
-def start_screen():
+def settings_screen():
     def draw_buttons():
-        # Parameters:             surface, color,      x,   y, length,height, width, text,text_color
-        redLineButton.create_button(screen, (255, 1, 0), 326, 77, 715, 117, 0, introText[0], (255, 204, 0))
-        startButton.create_button(screen, (255, 1, 0), 533, 345, 300, 70, 0, introText[1], (0, 0, 0))
-        settingsButton.create_button(screen, (255, 1, 0), 533, 468, 300, 70, 0, introText[2], (0, 0, 0))
-        exitButton.create_button(screen, (255, 1, 0), 533, 605, 300, 70, 0, introText[3], (0, 0, 0))
+        # Parameters:             surface,       color,    x,   y, length,height, width, text,   text_color
+        exit_button.create_button(screen, (255, 1, 0), 533, 605, 300, 70, 0, "Назад", (0, 0, 0))
 
-    introText = ["Красная ветка",
-                 "Старт",
-                 "Настройки",
-                 "Выход"]
+    exit_button = Button()
+    running_settings_screen = True
 
-    fon = Fon()
-    redLineButton = Button()
-    startButton = Button()
-    settingsButton = Button()
-    exitButton = Button()
-    draw_buttons()
-
-    runningStartScreen = True
-
-    while runningStartScreen:
+    while running_settings_screen:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                runningStartScreen = False
+                running_settings_screen = False
                 terminate()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    if redLineButton.pressed(pygame.mouse.get_pos()):
-                        pass
-                    elif startButton.pressed(pygame.mouse.get_pos()):
+                    if exit_button.pressed(pygame.mouse.get_pos()):
                         return
-                    elif settingsButton.pressed(pygame.mouse.get_pos()):
+        screen.fill(pygame.Color("black"))
+        startMenuSprites.draw(screen)
+        startMenuSprites.update()
+        draw_buttons()
+        if pygame.mouse.get_focused():
+            draw_cursor(*pygame.mouse.get_pos())
+        pygame.display.flip()
+        clock.tick(FPS)
+
+
+def start_screen():
+    def draw_buttons():
+        # Parameters:                surface,    color,    x,   y, length,height, width, text,   text_color
+        red_line_button.create_button(screen, (255, 1, 0), 326, 77, 715, 117, 0, intro_text[0], (255, 204, 0))
+        start_button.create_button(screen, (255, 1, 0), 533, 345, 300, 70, 0, intro_text[1], (0, 0, 0))
+        settings_button.create_button(screen, (255, 1, 0), 533, 468, 300, 70, 0, intro_text[2], (0, 0, 0))
+        exit_button.create_button(screen, (255, 1, 0), 533, 605, 300, 70, 0, intro_text[3], (0, 0, 0))
+
+    intro_text = ["Красная ветка",
+                  "Старт",
+                  "Настройки",
+                  "Выход"]
+
+    fon = Fon()
+    red_line_button = Button()
+    start_button = Button()
+    settings_button = Button()
+    exit_button = Button()
+    draw_buttons()
+
+    running_start_screen = True
+
+    while running_start_screen:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running_start_screen = False
+                terminate()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    if red_line_button.pressed(pygame.mouse.get_pos()):
                         pass
-                    elif exitButton.pressed(pygame.mouse.get_pos()):
+                    elif start_button.pressed(pygame.mouse.get_pos()):
+                        return
+                    elif settings_button.pressed(pygame.mouse.get_pos()):
+                        settings_screen()
+                    elif exit_button.pressed(pygame.mouse.get_pos()):
                         terminate()
         screen.fill(pygame.Color("black"))
         startMenuSprites.draw(screen)
@@ -149,23 +178,28 @@ class Fon(pygame.sprite.Sprite):
     def update(self):
         if self.rect.left < 0:
             self.rect.left += 1
+        else:
+            self.rect.left -= 520
 
 
-start_screen()
-running = True
-while running:
+if __name__ == '__main__':
+    start_screen()
+    running = True
+    while running:
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame.KEYDOWN:
-            pass
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN:
+                pass  # Добавить реакцию на нажатия клавиш
+            elif event.type == pygame.USEREVENT:
+                pass  # Смена станций
 
-    screen.fill(pygame.Color("black"))
-    if pygame.mouse.get_focused():
-        draw_cursor(*pygame.mouse.get_pos())
-    pygame.display.flip()
+        screen.fill(pygame.Color("black"))
+        if pygame.mouse.get_focused():
+            draw_cursor(*pygame.mouse.get_pos())
+        pygame.display.flip()
 
-    clock.tick(FPS)
+        clock.tick(FPS)
 
-terminate()
+    terminate()
