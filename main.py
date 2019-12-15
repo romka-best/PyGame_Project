@@ -12,9 +12,19 @@ HEIGHT = 768
 # STEP = 10
 TIMEBETWEENSTATIONS = 150000
 CURSOR = pygame.image.load("images/cursor.png")
+STATIONS = []
+for sound in range(1, 26):
+    num = str(sound // 10) + str(sound % 10)
+    if sound <= 8:
+        STATIONS.append("SL_new_{}_o_g.mp3".format(num))
+        STATIONS.append("SL_new_{}_p_g.mp3".format(num))
+    else:
+        STATIONS.append("SL_new_{}_o_m.mp3".format(num))
+        STATIONS.append("SL_new_{}_p_m.mp3".format(num))
 
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
 pygame.display.set_caption("Красная ветка")
+pygame.display.set_icon(pygame.image.load("images/icon.png"))
 pygame.mouse.set_visible(0)
 pygame.time.set_timer(pygame.USEREVENT, TIMEBETWEENSTATIONS)
 clock = pygame.time.Clock()
@@ -22,7 +32,7 @@ clock = pygame.time.Clock()
 startMenuSprites = pygame.sprite.Group()
 
 
-def load_image(name, colorKey=None):
+def load_image(name, color_key=None):
     fullname = os.path.join('images', name)
     try:
         image = pygame.image.load(fullname)
@@ -31,10 +41,10 @@ def load_image(name, colorKey=None):
         raise SystemExit(message)
     image = image.convert_alpha()
 
-    if colorKey is not None:
-        if colorKey is -1:
-            colorKey = image.get_at((0, 0))
-        image.set_colorkey(colorKey)
+    if color_key is not None:
+        if color_key is -1:
+            color_key = image.get_at((0, 0))
+        image.set_colorkey(color_key)
     return image
 
 
@@ -87,7 +97,10 @@ def start_screen():
                   "Настройки",
                   "Выход"]
 
-    fon = Fon()
+    pygame.mixer_music.load("sounds/fon.wav")
+    pygame.mixer_music.play(-1)
+    click = pygame.mixer.Sound("sounds/click.ogg")
+    Fon()
     red_line_button = Button()
     start_button = Button()
     settings_button = Button()
@@ -102,6 +115,7 @@ def start_screen():
                 running_start_screen = False
                 terminate()
             elif event.type == pygame.MOUSEBUTTONDOWN:
+                click.play()
                 if event.button == 1:
                     if red_line_button.pressed(pygame.mouse.get_pos()):
                         pass
@@ -111,7 +125,7 @@ def start_screen():
                         settings_screen()
                     elif exit_button.pressed(pygame.mouse.get_pos()):
                         terminate()
-        screen.fill(pygame.Color("black"))
+        screen.fill(pygame.Color((0, 0, 0)))
         startMenuSprites.draw(screen)
         startMenuSprites.update()
         draw_buttons()
@@ -119,6 +133,30 @@ def start_screen():
             draw_cursor(*pygame.mouse.get_pos())
         pygame.display.flip()
         clock.tick(FPS)
+
+
+def education_screen():
+    pass
+
+
+class Map:
+    pass
+
+
+class Backpack:
+    pass
+
+
+class Player(pygame.sprite.Sprite):
+    pass
+
+
+class Camera:
+    pass
+
+
+class Subway:
+    pass
 
 
 class Button:
@@ -154,16 +192,8 @@ class Button:
             if mouse[1] > self.rect.topleft[1]:
                 if mouse[0] < self.rect.bottomright[0]:
                     if mouse[1] < self.rect.bottomright[1]:
-                        print("Some button was pressed!")
                         return True
-                    else:
-                        return False
-                else:
-                    return False
-            else:
-                return False
-        else:
-            return False
+        return False
 
 
 class Fon(pygame.sprite.Sprite):
@@ -184,6 +214,8 @@ class Fon(pygame.sprite.Sprite):
 
 if __name__ == '__main__':
     start_screen()
+    pygame.mixer_music.load("sounds/Cyberpunk Moonlight Sonata v2.mp3")
+    # pygame.mixer_music.play(-1)
     running = True
     while running:
 
