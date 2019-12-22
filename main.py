@@ -4,12 +4,12 @@ import pygame
 import sqlite3
 
 pygame.init()
-# pygame.key.set_repeat(200, 70)
+pygame.key.set_repeat(100, 70)
 
 FPS = 50
 WIDTH = 1366
 HEIGHT = 768
-# STEP = 10
+STEP = 100
 TIMEBETWEENSTATIONS = 150000
 CURSOR = pygame.image.load("images/cursor.png")
 STATIONS = []
@@ -22,15 +22,18 @@ for sound in range(1, 26):
         STATIONS.append("SL_new_{}_o_m.mp3".format(num))
         STATIONS.append("SL_new_{}_p_m.mp3".format(num))
 
-screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
+# screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Красная ветка")
 pygame.display.set_icon(pygame.image.load("images/icon.png"))
 pygame.mouse.set_visible(0)
 pygame.time.set_timer(pygame.USEREVENT, TIMEBETWEENSTATIONS)
 clock = pygame.time.Clock()
 
-startMenuSprites = pygame.sprite.Group()
-allSprites = pygame.sprite.Group()
+start_menu_sprites = pygame.sprite.Group()
+all_groups = pygame.sprite.Group()
+player_group = pygame.sprite.Group()
+wagon_group = pygame.sprite.Group()
 
 
 def load_image(name, color_key=None):
@@ -61,7 +64,7 @@ def draw_cursor(x, y):
 def settings_screen():
     def draw_buttons():
         # Parameters:             surface,       color,    x,   y, length,height, width, text,   text_color
-        exit_button.create_button(screen, (255, 1, 0), 533, 605, 300, 70, 0, "Назад", (0, 0, 0))
+        exit_button.create_button(screen, (255, 1, 0), 81, 44, 300, 70, 0, "Назад", (0, 0, 0))
 
     exit_button = Button()
     running_settings_screen = True
@@ -76,8 +79,8 @@ def settings_screen():
                     if exit_button.pressed(pygame.mouse.get_pos()):
                         return
         screen.fill(pygame.Color("black"))
-        startMenuSprites.draw(screen)
-        startMenuSprites.update()
+        start_menu_sprites.draw(screen)
+        start_menu_sprites.update()
         draw_buttons()
         if pygame.mouse.get_focused():
             draw_cursor(*pygame.mouse.get_pos())
@@ -126,9 +129,9 @@ def start_screen():
                         settings_screen()
                     elif exit_button.pressed(pygame.mouse.get_pos()):
                         terminate()
-        screen.fill(pygame.Color((0, 0, 0)))
-        startMenuSprites.draw(screen)
-        startMenuSprites.update()
+        screen.fill(pygame.Color("black"))
+        start_menu_sprites.draw(screen)
+        start_menu_sprites.update()
         draw_buttons()
         if pygame.mouse.get_focused():
             draw_cursor(*pygame.mouse.get_pos())
@@ -144,30 +147,51 @@ def education_screen():
                 running_education_screen = False
                 terminate()
             elif event.type == pygame.KEYDOWN:
-                pass
-        screen.fill(pygame.Color((0, 0, 0)))
-        startMenuSprites.draw(screen)
-        startMenuSprites.update()
-        if pygame.mouse.get_focused():
-            draw_cursor(*pygame.mouse.get_pos())
+                if event.key == pygame.K_LEFT:
+                    player.rect.x -= STEP
+                if event.key == pygame.K_RIGHT:
+                    player.rect.x += STEP
+                if event.key == pygame.K_UP:
+                    player.rect.y -= STEP
+                if event.key == pygame.K_DOWN:
+                    player.rect.y += STEP
+        screen.fill(pygame.Color("black"))
+        camera.update(player)
+
+        for sprite in all_groups:
+            camera.apply(sprite)
+        # if pygame.mouse.get_focused():
+        #   draw_cursor(*pygame.mouse.get_pos())
+        # all_groups.draw(screen)
+        wagon_group.draw(screen)
+        player_group.draw(screen)
+
         pygame.display.flip()
         clock.tick(FPS)
 
 
 class Wagon(pygame.sprite.Sprite):
-    image = pygame.transform.scale(pygame.image.load("images/fon.jpg"), (2000, 2000))
+    image_up = pygame.transform.scale(pygame.image.load("images/Крайний вагон (Крыша).png"), (4096, 16))
+    image_middle = pygame.transform.scale(pygame.image.load("images/Крайний вагон (Середина).png"), (4096, 630))
+    image_down = pygame.transform.scale(pygame.image.load("images/Крайний вагон (Пол).png"), (4096, 9))
 
-    def __init__(self):
-        super().__init__(startMenuSprites)
-        self.image = Fon.image
-        self.rect = Fon.image.get_rect()
-        self.rect.left = -634
-
-    def update(self):
-        if self.rect.left < 0:
-            self.rect.left += 1
-        else:
-            self.rect.left -= 520
+    def __init__(self, type):
+        super().__init__(wagon_group, all_groups)
+        if type == "up":
+            self.image = Wagon.image_up
+            self.rect = self.image.get_rect()
+            self.rect.left = -2730
+            self.rect.top = 58
+        elif type == "middle":
+            self.image = Wagon.image_middle
+            self.rect = self.image.get_rect()
+            self.rect.left = -2730
+            self.rect.top = 74
+        elif type == "down":
+            self.image = Wagon.image_down
+            self.rect = self.image.get_rect()
+            self.rect.left = -2730
+            self.rect.top = 700
 
 
 class Map:
@@ -179,7 +203,14 @@ class Backpack:
 
 
 class Player(pygame.sprite.Sprite):
-    pass
+    image = pygame.image.load("images/character_malePerson_behindBack.png")
+
+    def __init__(self):
+        super().__init__(player_group, all_groups)
+        self.image = Player.image
+        self.rect = self.image.get_rect()
+        self.rect.left = 1080
+        self.rect.top = 448
 
 
 class Camera:
@@ -187,6 +218,7 @@ class Camera:
     def __init__(self):
         self.dx = 0
         self.dy = 0
+
 
     # сдвинуть объект obj на смещение камеры
     def apply(self, obj):
@@ -197,10 +229,6 @@ class Camera:
     def update(self, target):
         self.dx = -(target.rect.x + target.rect.w // 2 - WIDTH // 2)
         self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
-
-
-class Subway:
-    pass
 
 
 class Button:
@@ -244,7 +272,7 @@ class Fon(pygame.sprite.Sprite):
     image = pygame.transform.scale(pygame.image.load("images/fon.jpg"), (2000, 2000))
 
     def __init__(self):
-        super().__init__(startMenuSprites)
+        super().__init__(start_menu_sprites)
         self.image = Fon.image
         self.rect = Fon.image.get_rect()
         self.rect.left = -634
@@ -259,6 +287,12 @@ class Fon(pygame.sprite.Sprite):
 if __name__ == '__main__':
     start_screen()
     pygame.mixer_music.load("sounds/Cyberpunk Moonlight Sonata v2.mp3")
+    camera = Camera()
+    player = Player()
+    wagon_up = Wagon("up")
+    wagon_middle = Wagon("middle")
+    wagon_down = Wagon("down")
+    education_screen()
     # pygame.mixer_music.play(-1)
     running = True
     while running:
