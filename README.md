@@ -1,7 +1,7 @@
 # PyGame_Project
 My project with PyGame
 <h1>Данилов Роман - "Красная ветка"</h1>
-<h2>Группа: Москва - Школа 179 - 2 - Д2</h2>
+<h2>Группа: Москва - Школа 179 - 2 - Д19</h2>
 <h2>Электронная почта: romka.best2016@yandex.ru</h2>
 <h2>VK: https://vk.com/romka.best</h2>
 <h2>[Название проекта]</h2>
