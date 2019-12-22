@@ -30,6 +30,7 @@ pygame.time.set_timer(pygame.USEREVENT, TIMEBETWEENSTATIONS)
 clock = pygame.time.Clock()
 
 startMenuSprites = pygame.sprite.Group()
+allSprites = pygame.sprite.Group()
 
 
 def load_image(name, color_key=None):
@@ -136,7 +137,37 @@ def start_screen():
 
 
 def education_screen():
-    pass
+    running_education_screen = True
+    while running_education_screen:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running_education_screen = False
+                terminate()
+            elif event.type == pygame.KEYDOWN:
+                pass
+        screen.fill(pygame.Color((0, 0, 0)))
+        startMenuSprites.draw(screen)
+        startMenuSprites.update()
+        if pygame.mouse.get_focused():
+            draw_cursor(*pygame.mouse.get_pos())
+        pygame.display.flip()
+        clock.tick(FPS)
+
+
+class Wagon(pygame.sprite.Sprite):
+    image = pygame.transform.scale(pygame.image.load("images/fon.jpg"), (2000, 2000))
+
+    def __init__(self):
+        super().__init__(startMenuSprites)
+        self.image = Fon.image
+        self.rect = Fon.image.get_rect()
+        self.rect.left = -634
+
+    def update(self):
+        if self.rect.left < 0:
+            self.rect.left += 1
+        else:
+            self.rect.left -= 520
 
 
 class Map:
@@ -152,7 +183,20 @@ class Player(pygame.sprite.Sprite):
 
 
 class Camera:
-    pass
+    # зададим начальный сдвиг камеры и размер поля для возможности реализации циклического сдвига
+    def __init__(self):
+        self.dx = 0
+        self.dy = 0
+
+    # сдвинуть объект obj на смещение камеры
+    def apply(self, obj):
+        obj.rect.x += self.dx
+        obj.rect.y += self.dy
+
+    # позиционировать камеру на объекте target
+    def update(self, target):
+        self.dx = -(target.rect.x + target.rect.w // 2 - WIDTH // 2)
+        self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
 
 
 class Subway:
