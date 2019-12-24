@@ -14,14 +14,11 @@ TIMEBETWEENSTATIONS = 150000
 CURSOR = pygame.image.load("images/cursor.png")
 CLICK = pygame.mixer.Sound("sounds/click.ogg")
 STATIONS = []
-for sound in range(1, 26):
-    num = str(sound // 10) + str(sound % 10)
-    if sound <= 8:
-        STATIONS.append("SL_new_{}_o_g.mp3".format(num))
-        STATIONS.append("SL_new_{}_p_g.mp3".format(num))
-    else:
-        STATIONS.append("SL_new_{}_o_m.mp3".format(num))
-        STATIONS.append("SL_new_{}_p_m.mp3".format(num))
+directory = "sounds/"
+sounds = os.listdir(directory)
+for sound in range(len(sounds)):
+    if sounds[sound].startswith("SL_new_"):
+        STATIONS.append(sounds[sound])
 
 # screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -141,34 +138,52 @@ def start_screen():
         clock.tick(FPS)
 
 
-def education_screen():
-    running_education_screen = True
-    while running_education_screen:
+def choice_screen():
+    def draw_buttons():
+        # Parameters:                surface,    color,    x,   y, length,height, width, text,   text_color
+        start_button.create_button(screen, (255, 1, 0), 419, 36, 529, 75, 0, text[0], (255, 204, 0))
+        page_button.create_button(screen, (255, 1, 0), 419, 656, 529, 75, 0, text[1], (0, 0, 0))
+
+    text = ["Выберите аватар",
+            "----->",
+            "<-----"]
+
+    pygame.mixer_music.load("sounds/fon.wav")
+    pygame.mixer_music.play(-1)
+    start_button = Button()
+    page_button = Button()
+    draw_buttons()
+    directory = "images/avatars/"
+    avatars = os.listdir(directory)
+    AVATARS = {"bear": (105, 127),
+               "chick": (589, 127),
+               "cow": (1076, 320)}
+
+    running_choice_screen = True
+
+    while running_choice_screen:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running_education_screen = False
+                running_choice_screen = False
                 terminate()
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    player.update("L")
-                if event.key == pygame.K_RIGHT:
-                    player.update("R")
-            elif event.type == pygame.KEYUP:
-                player.update("S")
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                CLICK.play()
+                if event.button == 1:
+                    pass
         screen.fill(pygame.Color("black"))
-        camera.update(player)
-
-        for sprite in all_groups:
-            camera.apply(sprite)
-        # if pygame.mouse.get_focused():
-        #   draw_cursor(*pygame.mouse.get_pos())
-        # all_groups.draw(screen)
-        wagon_group.draw(screen)
-        icon_group.draw(screen)
-        player_group.draw(screen)
-
+        draw_buttons()
+        if pygame.mouse.get_focused():
+            draw_cursor(*pygame.mouse.get_pos())
         pygame.display.flip()
         clock.tick(FPS)
+
+
+class Avatar:
+    def __init__(self, name, pos):
+        self.image = pygame.transform.load(f"images/avatars/{name}")
+        self.rect = self.image.get_rect()
+        self.rect.left = pos[0]
+        self.rect.top = pos[1]
 
 
 class Wagon(pygame.sprite.Sprite):
@@ -178,6 +193,7 @@ class Wagon(pygame.sprite.Sprite):
     image_cabin = pygame.transform.scale(pygame.image.load("images/Кабинка машиниста.png"), (488, 630))
     image_cabin_rot = pygame.transform.flip(pygame.transform.scale(
         pygame.image.load("images/Кабинка машиниста.png"), (488, 630)), 1, 0)
+    image_prohod = pygame.transform.scale(pygame.image.load("images/Проход между вагонами.png"), (131, 630))
 
     def __init__(self, type):
         super().__init__(wagon_group, all_groups)
@@ -203,6 +219,11 @@ class Wagon(pygame.sprite.Sprite):
             self.image = Wagon.image_cabin_rot
             self.rect = self.image.get_rect()
             self.rect.left = 1364
+            self.rect.top = 74
+        elif type == "prohod":
+            self.image = Wagon.image_prohod
+            self.rect = self.image.get_rect()
+            self.rect.left = -2851
             self.rect.top = 74
         self.type = type
         self.mask = pygame.mask.from_surface(self.image)
@@ -257,7 +278,7 @@ class Player(pygame.sprite.Sprite):
             self.image = self.frames_left[self.cur_frame]
             player.rect.x -= STEP
             for i in wagon_group:
-                if i.type == 'cabin' or i.type == "cabin_rot":
+                if i.type == 'cabin' or i.type == "cabin_rot" or i.type == "prohod":
                     if pygame.sprite.collide_mask(self, i):
                         self.image = self.frames[1]
                         player.rect.x += STEP
@@ -267,7 +288,7 @@ class Player(pygame.sprite.Sprite):
             self.image = self.frames_right[self.cur_frame]
             player.rect.x += STEP
             for i in wagon_group:
-                if i.type == 'cabin' or i.type == "cabin_rot":
+                if i.type == 'cabin' or i.type == "cabin_rot" or i.type == "prohod":
                     if pygame.sprite.collide_mask(self, i):
                         self.image = self.frames[1]
                         player.rect.x -= STEP
@@ -349,33 +370,47 @@ class Fon(pygame.sprite.Sprite):
 
 if __name__ == '__main__':
     start_screen()
+    # choice_screen()
     pygame.mixer_music.load("sounds/Cyberpunk Moonlight Sonata v2.mp3")
     camera = Camera()
     player = Player()
-    wagon_up = Wagon("up")
-    wagon_middle = Wagon("middle")
-    wagon_down = Wagon("down")
+    last_wagon_up = Wagon("up")
+    last_wagon_middle = Wagon("middle")
+    last_wagon_down = Wagon("down")
+    last_prohod = Wagon("prohod")
     cabin_last = Wagon("cabin_rot")
     backpack = Backpack()
     map = Map()
-    education_screen()
-    # pygame.mixer_music.play(-1)
+    pygame.mixer_music.play(-1)
     running = True
     while running:
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+                terminate()
             elif event.type == pygame.KEYDOWN:
-                pass  # Добавить реакцию на нажатия клавиш
+                if event.key == pygame.K_LEFT:
+                    player.update("L")
+                if event.key == pygame.K_RIGHT:
+                    player.update("R")
+            elif event.type == pygame.KEYUP:
+                player.update("S")
             elif event.type == pygame.USEREVENT:
                 pass  # Смена станций
 
         screen.fill(pygame.Color("black"))
-        if pygame.mouse.get_focused():
-            draw_cursor(*pygame.mouse.get_pos())
-        pygame.display.flip()
+        camera.update(player)
 
+        for sprite in all_groups:
+            camera.apply(sprite)
+        # if pygame.mouse.get_focused():
+        #   draw_cursor(*pygame.mouse.get_pos())
+        # all_groups.draw(screen)
+        wagon_group.draw(screen)
+        icon_group.draw(screen)
+        player_group.draw(screen)
+
+        pygame.display.flip()
         clock.tick(FPS)
 
     terminate()
