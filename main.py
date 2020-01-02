@@ -60,11 +60,11 @@ def draw_cursor(x, y):
     screen.blit(CURSOR, (x, y))
 
 
-def settings_screen():
-    def draw_buttons():
-        # Parameters:             surface,       color,    x,   y, length,height, width, text,   text_color
-        exit_button.create_button(screen, (255, 1, 0), 81, 44, 300, 70, 0, "Назад", (0, 0, 0))
+def draw_buttons(obj, c1, c2, c3, x, y, length, height, width, text, text_c1, text_c2, text_c3):
+    obj.create_button(screen, (c1, c2, c3), x, y, length, height, width, text, (text_c1, text_c2, text_c3))
 
+
+def settings_screen():
     exit_button = Button()
     running_settings_screen = True
 
@@ -81,7 +81,7 @@ def settings_screen():
         screen.fill(pygame.Color("black"))
         start_menu_sprites.draw(screen)
         start_menu_sprites.update()
-        draw_buttons()
+        draw_buttons(exit_button, 255, 1, 0, 81, 44, 300, 70, 0, "Назад", 0, 0, 0)
         if pygame.mouse.get_focused():
             draw_cursor(*pygame.mouse.get_pos())
         pygame.display.flip()
@@ -89,13 +89,6 @@ def settings_screen():
 
 
 def start_screen():
-    def draw_buttons():
-        # Parameters:                surface,    color,    x,   y, length,height, width, text,   text_color
-        red_line_button.create_button(screen, (255, 1, 0), 326, 77, 715, 117, 0, intro_text[0], (255, 204, 0))
-        start_button.create_button(screen, (255, 1, 0), 533, 345, 300, 70, 0, intro_text[1], (0, 0, 0))
-        settings_button.create_button(screen, (255, 1, 0), 533, 468, 300, 70, 0, intro_text[2], (0, 0, 0))
-        exit_button.create_button(screen, (255, 1, 0), 533, 605, 300, 70, 0, intro_text[3], (0, 0, 0))
-
     intro_text = ["Красная ветка",
                   "Старт",
                   "Настройки",
@@ -108,7 +101,6 @@ def start_screen():
     start_button = Button()
     settings_button = Button()
     exit_button = Button()
-    draw_buttons()
 
     running_start_screen = True
 
@@ -131,7 +123,10 @@ def start_screen():
         screen.fill(pygame.Color("black"))
         start_menu_sprites.draw(screen)
         start_menu_sprites.update()
-        draw_buttons()
+        draw_buttons(red_line_button, 255, 1, 0, 326, 77, 715, 117, 0, intro_text[0], 255, 204, 0)
+        draw_buttons(start_button, 255, 1, 0, 533, 345, 300, 70, 0, intro_text[1], 0, 0, 0)
+        draw_buttons(settings_button, 255, 1, 0, 533, 468, 300, 70, 0, intro_text[2], 0, 0, 0)
+        draw_buttons(exit_button, 255, 1, 0, 533, 605, 300, 70, 0, intro_text[3], 0, 0, 0)
         if pygame.mouse.get_focused():
             draw_cursor(*pygame.mouse.get_pos())
         pygame.display.flip()
@@ -139,11 +134,6 @@ def start_screen():
 
 
 def choice_screen():
-    def draw_buttons():
-        # Parameters:                surface,    color,    x,   y, length,height, width, text,   text_color
-        start_button.create_button(screen, (255, 1, 0), 419, 36, 529, 75, 0, text[0], (255, 204, 0))
-        page_button.create_button(screen, (255, 1, 0), 419, 656, 529, 75, 0, text[1], (0, 0, 0))
-
     text = ["Выберите аватар",
             "----->",
             "<-----"]
@@ -152,12 +142,37 @@ def choice_screen():
     pygame.mixer_music.play(-1)
     start_button = Button()
     page_button = Button()
-    draw_buttons()
     directory = "images/avatars/"
     avatars = os.listdir(directory)
     AVATARS = {"bear": (105, 127),
-               "chick": (589, 127),
-               "cow": (1076, 320)}
+               "chick": (616, 127),
+               "cow": (1076, 320),
+               "crocodile": (367, 127),
+               "dog": (),
+               "duck": (),
+               "elephant": (),
+               "frog": (),
+               "giraffe": (),
+               "goat": (),
+               "gorilla": (),
+               "hippo": (),
+               "horse": (),
+               "monkey": (),
+               "moose": (),
+               "narwhal": (),
+               "owl": (),
+               "panda": (),
+               "parrot": (),
+               "penguin": (),
+               "pig": (),
+               "rabbit": (),
+               "rhino": (),
+               "sloth": (),
+               "snake": (),
+               "walrus": (),
+               "whale": (),
+               "zebra": ()
+               }
 
     running_choice_screen = True
 
@@ -169,9 +184,13 @@ def choice_screen():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 CLICK.play()
                 if event.button == 1:
-                    pass
+                    if start_button.pressed(pygame.mouse.get_pos()):
+                        pass
+                    elif page_button.pressed(pygame.mouse.get_pos()):
+                        text[1], text[2] = text[2], text[1]
         screen.fill(pygame.Color("black"))
-        draw_buttons()
+        draw_buttons(start_button, 255, 1, 0, 419, 36, 529, 75, 0, text[0], 255, 204, 0)
+        draw_buttons(page_button, 255, 1, 0, 419, 656, 529, 75, 0, text[1], 0, 0, 0)
         if pygame.mouse.get_focused():
             draw_cursor(*pygame.mouse.get_pos())
         pygame.display.flip()
@@ -184,6 +203,14 @@ class Avatar:
         self.rect = self.image.get_rect()
         self.rect.left = pos[0]
         self.rect.top = pos[1]
+
+    def pressed(self, mouse):
+        if mouse[0] > self.rect.topleft[0]:
+            if mouse[1] > self.rect.topleft[1]:
+                if mouse[0] < self.rect.bottomright[0]:
+                    if mouse[1] < self.rect.bottomright[1]:
+                        return True
+        return False
 
 
 class Wagon(pygame.sprite.Sprite):
@@ -260,7 +287,7 @@ class Player(pygame.sprite.Sprite):
         self.frames_left = []
         self.frames_right = []
         self.frames = [self.image, pygame.image.load("images/character_malePerson_think.png")]
-        for i in range(8):
+        for i in range(6):
             self.frames_right.append(pygame.image.load(f"images/character_malePerson_walk{i}.png"))
             self.frames_left.append(pygame.transform.flip(pygame.image.load
                                                           (f"images/character_malePerson_walk{i}.png"), 1, 0))
@@ -313,6 +340,46 @@ class Camera:
     def update(self, target):
         self.dx = -(target.rect.x + target.rect.w // 2 - WIDTH // 2)
         self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
+
+
+class Board:
+    def __init__(self, width, height, left=10, top=10, cell_size=30):
+        self.width = width
+        self.height = height
+        self.board = [[0] * width for _ in range(height)]
+        self.left = 0
+        self.top = 0
+        self.cell_size = 0
+        self.set_view(left, top, cell_size)
+
+    def set_view(self, left, top, cell_size):
+        self.left = left
+        self.top = top
+        self.cell_size = cell_size
+
+    def render(self):
+        for y in range(self.height):
+            for x in range(self.width):
+                pygame.draw.rect(screen, pygame.Color("white"),
+                                 (x * self.cell_size + self.left,
+                                  y * self.cell_size + self.top,
+                                  self.cell_size, self.cell_size), 1)
+
+    def on_click(self, cell):
+        pass
+
+    def get_click(self, mouse_pos):
+        cell = self.get_cell(mouse_pos)
+        if cell:
+            self.on_click(cell)
+
+    def get_cell(self, mouse_pos):
+        cell_x = (mouse_pos[0] - self.left) // self.cell_size
+        cell_y = (mouse_pos[1] - self.top) // self.cell_size
+        if cell_x < 0 or cell_x >= self.width or \
+                cell_y < 0 or cell_y >= self.height:
+            return None
+        return cell_x, cell_y
 
 
 class Button:
@@ -381,7 +448,7 @@ if __name__ == '__main__':
     cabin_last = Wagon("cabin_rot")
     backpack = Backpack()
     map = Map()
-    pygame.mixer_music.play(-1)
+    # pygame.mixer_music.play(-1)
     running = True
     while running:
         for event in pygame.event.get():
