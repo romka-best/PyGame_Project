@@ -13,6 +13,8 @@ while True:
             counter -= 1
             text = str(counter).rjust(3) if counter > 0 else 'boom!'
         if e.type == pygame.QUIT: break
+        if e.type == pygame.KEYDOWN:
+            print(e.unicode)
     else:
         screen.fill((255, 255, 255))
         screen.blit(font.render(text, True, (0, 0, 0)), (32, 48))

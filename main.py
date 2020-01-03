@@ -9,16 +9,43 @@ pygame.key.set_repeat(100, 70)
 FPS = 50
 WIDTH = 1366
 HEIGHT = 768
-STEP = 100
+STEP = 50
 TIMEBETWEENSTATIONS = 150000
+TIME = 15000
 CURSOR = pygame.image.load("images/cursor.png")
 CLICK = pygame.mixer.Sound("sounds/click.ogg")
-STATIONS = []
+STATIONS_SOUNDS = []
+STATIONS = [("Коммунарка",),
+            ("Ольховая",),
+            ("Прокшино",),
+            ("Филатов Луг",),
+            ("Саларьево",),
+            ("Румянцево",),
+            ("Тропарёво",),
+            ("Юго-Западная",),
+            ("Проспект Вернадского",),
+            ("Университет",),
+            ("Воробьёвы горы",),
+            ("Спортивная",),
+            ("Фрунзенская",),
+            ("Парк культуры",),
+            ("Кропоткинская",),
+            ("Библиотека имени Ленина",),
+            ("Охотный Ряд",),
+            ("Лубянка",),
+            ("Чистые пруды",),
+            ("Красные Ворота",),
+            ("Комсомольская",),
+            ("Красносельская",),
+            ("Сокольники",),
+            ("Преображенская площадь",),
+            ("Черкизовская",),
+            ("Бульвар Рокоссовского",)]
 directory = "sounds/"
 sounds = os.listdir(directory)
 for sound in range(len(sounds)):
     if sounds[sound].startswith("SL_new_"):
-        STATIONS.append(sounds[sound])
+        STATIONS_SOUNDS.append(sounds[sound])
 
 # screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -26,6 +53,7 @@ pygame.display.set_caption("Красная ветка")
 pygame.display.set_icon(pygame.image.load("images/icon.png"))
 pygame.mouse.set_visible(0)
 pygame.time.set_timer(pygame.USEREVENT, TIMEBETWEENSTATIONS)
+# pygame.time.set_timer(31, TIME)
 clock = pygame.time.Clock()
 
 start_menu_sprites = pygame.sprite.Group()
@@ -133,7 +161,7 @@ def start_screen():
         clock.tick(FPS)
 
 
-def choice_screen():
+def choice_avatar_screen():
     text = ["Выберите аватар",
             "----->",
             "<-----"]
@@ -142,37 +170,36 @@ def choice_screen():
     pygame.mixer_music.play(-1)
     start_button = Button()
     page_button = Button()
-    directory = "images/avatars/"
-    avatars = os.listdir(directory)
-    AVATARS = {"bear": (105, 127),
-               "chick": (616, 127),
-               "cow": (1076, 320),
-               "crocodile": (367, 127),
-               "dog": (),
-               "duck": (),
-               "elephant": (),
-               "frog": (),
-               "giraffe": (),
-               "goat": (),
-               "gorilla": (),
-               "hippo": (),
-               "horse": (),
-               "monkey": (),
-               "moose": (),
-               "narwhal": (),
-               "owl": (),
-               "panda": (),
-               "parrot": (),
-               "penguin": (),
-               "pig": (),
-               "rabbit": (),
-               "rhino": (),
-               "sloth": (),
-               "snake": (),
-               "walrus": (),
-               "whale": (),
-               "zebra": ()
-               }
+    AVATARS1 = {"bear": (105, 127),
+                "chick": (616, 127),
+                "cow": (1076, 320),
+                "crocodile": (367, 127),
+                "dog": (),
+                "duck": (),
+                "elephant": (),
+                "frog": (),
+                "giraffe": (),
+                "goat": (),
+                "gorilla": (),
+                "hippo": (),
+                "horse": (),
+                "monkey": (),
+                "moose": (),
+                "narwhal": (),
+                "owl": (),
+                "panda": (),
+                "parrot": (),
+                "penguin": (),
+                "pig": (),
+                "rabbit": (),
+                "rhino": (),
+                "sloth": (),
+                "snake": (),
+                "walrus": (),
+                "whale": (),
+                "zebra": ()
+                }
+    AVATARS2 = {}
 
     running_choice_screen = True
 
@@ -197,6 +224,49 @@ def choice_screen():
         clock.tick(FPS)
 
 
+def choice_screen_name():
+    text = ["Введите имя",
+            "СТАРТ",
+            " "]
+
+    pygame.mixer_music.load("sounds/fon.wav")
+    pygame.mixer_music.play(-1)
+    start_button = Button()
+    text_button = Button()
+    name_button = Button()
+
+    running_choice_name_screen = True
+
+    while running_choice_name_screen:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                CLICK.play()
+                if event.button == 1:
+                    if start_button.pressed(pygame.mouse.get_pos()):
+                        # Добавить в БД
+                        return
+            elif event.type == pygame.KEYDOWN:
+                if event.unicode == "":
+                    text[2] = " "
+                elif event.unicode == "\x08":
+                    text[2] = text[2][0:-1]
+                else:
+                    text[2] += event.unicode
+        screen.fill(pygame.Color("black"))
+        try:
+            draw_buttons(name_button, 255, 1, 0, 418, 36, 529, 75, 0, text[0], 255, 204, 0)
+            draw_buttons(text_button, 255, 255, 255, 433, 334, 500, 100, 0, text[2], 0, 0, 0)
+            draw_buttons(start_button, 255, 1, 0, 418, 656, 529, 75, 0, text[1], 0, 0, 0)
+        except ZeroDivisionError:
+            text[2] = " "
+        if pygame.mouse.get_focused():
+            draw_cursor(*pygame.mouse.get_pos())
+        pygame.display.flip()
+        clock.tick(FPS)
+
+
 class Avatar:
     def __init__(self, name, pos):
         self.image = pygame.transform.load(f"images/avatars/{name}")
@@ -214,44 +284,25 @@ class Avatar:
 
 
 class Wagon(pygame.sprite.Sprite):
-    image_up = pygame.transform.scale(pygame.image.load("images/Крайний вагон (Крыша).png"), (4096, 16))
-    image_middle = pygame.transform.scale(pygame.image.load("images/Крайний вагон (Середина).png"), (4096, 630))
-    image_down = pygame.transform.scale(pygame.image.load("images/Крайний вагон (Пол).png"), (4096, 9))
-    image_cabin = pygame.transform.scale(pygame.image.load("images/Кабинка машиниста.png"), (488, 630))
-    image_cabin_rot = pygame.transform.flip(pygame.transform.scale(
-        pygame.image.load("images/Кабинка машиниста.png"), (488, 630)), 1, 0)
-    image_prohod = pygame.transform.scale(pygame.image.load("images/Проход между вагонами.png"), (131, 630))
+    image_wagon = pygame.image.load("images/Вагон.png")
+    image_cabin = pygame.image.load("images/Кабинка машиниста.png")
+    image_cabin_rot = pygame.transform.flip(pygame.image.load("images/Кабинка машиниста.png"), 1, 0)
+    image_prohod = pygame.image.load("images/Между.png")
 
-    def __init__(self, type):
+    def __init__(self, type, left, top):
         super().__init__(wagon_group, all_groups)
-        if type == "up":
-            self.image = Wagon.image_up
-            self.rect = self.image.get_rect()
-            self.rect.left = -2537
-            self.rect.top = 64
-        elif type == "middle":
-            self.image = Wagon.image_middle
-            self.rect = self.image.get_rect()
-            self.rect.left = -2727
-            self.rect.top = 74
-        elif type == "down":
-            self.image = Wagon.image_down
-            self.rect = self.image.get_rect()
-            self.rect.left = -2242
-            self.rect.top = 704
+        if type.startswith("wagon"):
+            self.image = Wagon.image_wagon
         elif type == "cabin":
             self.image = Wagon.image_cabin
-            self.rect = self.image.get_rect()
         elif type == "cabin_rot":
             self.image = Wagon.image_cabin_rot
-            self.rect = self.image.get_rect()
-            self.rect.left = 1364
-            self.rect.top = 74
-        elif type == "prohod":
+        elif type.startswith("prohod"):
             self.image = Wagon.image_prohod
-            self.rect = self.image.get_rect()
-            self.rect.left = -2851
-            self.rect.top = 74
+            self.image = self.image.convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.left = left
+        self.rect.top = top
         self.type = type
         self.mask = pygame.mask.from_surface(self.image)
 
@@ -259,12 +310,19 @@ class Wagon(pygame.sprite.Sprite):
 class Map(pygame.sprite.Sprite):
     image = pygame.transform.scale(pygame.image.load("images/map_icon.png"), (128, 128))
 
-    def __init__(self):
+    def __init__(self, current_station):
         super().__init__(icon_group)
         self.image = Map.image
         self.rect = self.image.get_rect()
         self.rect.left = 1238
         self.rect.top = 0
+        self.current_station = current_station
+
+    def set_current_station(self, new_current_station):
+        self.current_station = new_current_station
+
+    def get_current_station(self):
+        return self.current_station
 
 
 class Backpack(pygame.sprite.Sprite):
@@ -293,8 +351,8 @@ class Player(pygame.sprite.Sprite):
                                                           (f"images/character_malePerson_walk{i}.png"), 1, 0))
 
         self.rect = self.image.get_rect()
-        self.rect.left = 1080
-        self.rect.top = 448
+        self.rect.left = 576
+        self.rect.top = 306
         self.cur_frame = 0
         self.mask = pygame.mask.from_surface(self.image)
 
@@ -305,7 +363,7 @@ class Player(pygame.sprite.Sprite):
             self.image = self.frames_left[self.cur_frame]
             player.rect.x -= STEP
             for i in wagon_group:
-                if i.type == 'cabin' or i.type == "cabin_rot" or i.type == "prohod":
+                if i.type == 'cabin' or i.type == "cabin_rot" or i.type == "prohod6":
                     if pygame.sprite.collide_mask(self, i):
                         self.image = self.frames[1]
                         player.rect.x += STEP
@@ -315,7 +373,7 @@ class Player(pygame.sprite.Sprite):
             self.image = self.frames_right[self.cur_frame]
             player.rect.x += STEP
             for i in wagon_group:
-                if i.type == 'cabin' or i.type == "cabin_rot" or i.type == "prohod":
+                if i.type == 'cabin' or i.type == "cabin_rot":
                     if pygame.sprite.collide_mask(self, i):
                         self.image = self.frames[1]
                         player.rect.x -= STEP
@@ -437,17 +495,22 @@ class Fon(pygame.sprite.Sprite):
 
 if __name__ == '__main__':
     start_screen()
-    # choice_screen()
+    # choice_avatar_screen() Не до конца
+    # choice_screen_name() Не до конца
     pygame.mixer_music.load("sounds/Cyberpunk Moonlight Sonata v2.mp3")
+    flags = [False, False, False, False, False, False]
     camera = Camera()
     player = Player()
-    last_wagon_up = Wagon("up")
-    last_wagon_middle = Wagon("middle")
-    last_wagon_down = Wagon("down")
-    last_prohod = Wagon("prohod")
-    cabin_last = Wagon("cabin_rot")
+    last_wagon = Wagon("wagon7", -3773, 34)
+    last_prohod = Wagon("prohod6", -3917, 34)
+    last_cabin = Wagon("cabin_rot", 823, 34)
     backpack = Backpack()
-    map = Map()
+    map = Map(STATIONS[0][0])
+    num = -2
+    station = pygame.mixer.Sound("sounds/" + STATIONS_SOUNDS[num])
+    del STATIONS_SOUNDS[num]
+    num = -1
+    station.play()
     # pygame.mixer_music.play(-1)
     running = True
     while running:
@@ -456,14 +519,20 @@ if __name__ == '__main__':
                 running = False
                 terminate()
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
+                if event.key == pygame.K_LEFT or event.unicode == "a":
                     player.update("L")
-                if event.key == pygame.K_RIGHT:
+                if event.key == pygame.K_RIGHT or event.unicode == "d":
                     player.update("R")
             elif event.type == pygame.KEYUP:
                 player.update("S")
             elif event.type == pygame.USEREVENT:
-                pass  # Смена станций
+                current_station = pygame.mixer.Sound("sounds/" + STATIONS_SOUNDS[num])
+                current_station.play()
+                del STATIONS_SOUNDS[num]
+                if num == -1:
+                    num = -2
+                elif num == -2:
+                    num = -1
 
         screen.fill(pygame.Color("black"))
         camera.update(player)
