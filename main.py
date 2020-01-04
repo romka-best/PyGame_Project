@@ -47,8 +47,8 @@ for sound in range(len(sounds)):
     if sounds[sound].startswith("SL_new_"):
         STATIONS_SOUNDS.append(sounds[sound])
 
-# screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
+# screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Красная ветка")
 pygame.display.set_icon(pygame.image.load("images/icon.png"))
 pygame.mouse.set_visible(0)
@@ -275,11 +275,9 @@ class Avatar:
         self.rect.top = pos[1]
 
     def pressed(self, mouse):
-        if mouse[0] > self.rect.topleft[0]:
-            if mouse[1] > self.rect.topleft[1]:
-                if mouse[0] < self.rect.bottomright[0]:
-                    if mouse[1] < self.rect.bottomright[1]:
-                        return True
+        if self.rect.topleft[0] < mouse[0] < self.rect.bottomright[0] and self.rect.topleft[1] < mouse[1] < \
+                self.rect.bottomright[1]:
+            return True
         return False
 
 
@@ -336,25 +334,39 @@ class Backpack(pygame.sprite.Sprite):
         self.rect.top = 0
 
 
+class Dialog:
+    pass
+
+
 class Player(pygame.sprite.Sprite):
     image = pygame.image.load("images/character_malePerson_behindBack.png")
+    image_think = pygame.image.load("images/character_malePerson_think.png")
+    image_back = pygame.image.load("images/character_malePerson_back.png")
 
     def __init__(self):
         super().__init__(player_group, all_groups)
         self.image = Player.image
         self.frames_left = []
         self.frames_right = []
-        self.frames = [self.image, pygame.image.load("images/character_malePerson_think.png")]
+        self.frames_down_left = []
+        self.frames_down_right = []
+        self.frames = [self.image, Player.image_think, Player.image_back, ]
         for i in range(6):
             self.frames_right.append(pygame.image.load(f"images/character_malePerson_walk{i}.png"))
             self.frames_left.append(pygame.transform.flip(pygame.image.load
                                                           (f"images/character_malePerson_walk{i}.png"), 1, 0))
+
+        for i in range(4):
+            self.frames_down_right.append(pygame.image.load(f'images/character_malePerson_crouch{i}.png'))
+            self.frames_down_left.append(pygame.transform.flip(pygame.image.load
+                                                               (f'images/character_malePerson_crouch{i}.png'), 1, 0))
 
         self.rect = self.image.get_rect()
         self.rect.left = 576
         self.rect.top = 306
         self.cur_frame = 0
         self.mask = pygame.mask.from_surface(self.image)
+        self.last = None
 
     def update(self, *args):
         who = args[0]
@@ -363,7 +375,8 @@ class Player(pygame.sprite.Sprite):
             self.image = self.frames_left[self.cur_frame]
             player.rect.x -= STEP
             for i in wagon_group:
-                if i.type == 'cabin' or i.type == "cabin_rot" or i.type == "prohod6":
+                if i.type == 'cabin' or i.type == "cabin_rot" or (i.type.startswith("prohod") and
+                                                                  not flags[int(i.type[-1]) - 1]):
                     if pygame.sprite.collide_mask(self, i):
                         self.image = self.frames[1]
                         player.rect.x += STEP
@@ -373,14 +386,29 @@ class Player(pygame.sprite.Sprite):
             self.image = self.frames_right[self.cur_frame]
             player.rect.x += STEP
             for i in wagon_group:
-                if i.type == 'cabin' or i.type == "cabin_rot":
+                if i.type == 'cabin' or i.type == "cabin_rot" or (i.type.startswith("prohod") and
+                                                                  not flags[int(i.type[-1]) - 1]):
                     if pygame.sprite.collide_mask(self, i):
                         self.image = self.frames[1]
                         player.rect.x -= STEP
                         break
+        elif who == "U":
+            self.image = self.frames[2]
+            self.cur_frame = 2
+        elif who == "D":
+            if self.cur_frame != 3:
+                self.cur_frame = (self.cur_frame + 1) % len(self.frames_down_right)
+            if self.last == "R":
+                self.image = self.frames_down_right[self.cur_frame]
+            elif self.last == "L":
+                self.image = self.frames_down_left[self.cur_frame]
+            return
+
         else:
             self.image = self.frames[0]
             self.cur_frame = 0
+            return
+        self.last = who
 
 
 class Camera:
@@ -449,7 +477,7 @@ class Button:
 
     def write_text(self, surface, text, text_color, length, height, x, y):
         font_size = int(length // len(text))
-        myFont = pygame.font.Font("Roboto-Black.ttf", font_size)
+        myFont = pygame.font.Font("font/Roboto-Black.ttf", font_size)
         myText = myFont.render(text, 1, text_color)
         surface.blit(myText, ((x + length / 2) - myText.get_width() / 2, (y + height / 2) - myText.get_height() / 2))
         return surface
@@ -499,6 +527,15 @@ if __name__ == '__main__':
     # choice_screen_name() Не до конца
     pygame.mixer_music.load("sounds/Cyberpunk Moonlight Sonata v2.mp3")
     flags = [False, False, False, False, False, False]
+    menu = False
+    menu_text = ["Меню", "Время: ", "Вкл/Выкл звук", "Назад", "Выход из игры"]
+    fon_menu = Button()
+    menu_button = Button()
+    exit_button = Button()
+    back_button = Button()
+    time_button = Button()
+    sound_button = Button()
+
     camera = Camera()
     player = Player()
     last_wagon = Wagon("wagon7", -3773, 34)
@@ -519,12 +556,26 @@ if __name__ == '__main__':
                 running = False
                 terminate()
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT or event.unicode == "a":
-                    player.update("L")
-                if event.key == pygame.K_RIGHT or event.unicode == "d":
-                    player.update("R")
+                if event.unicode == "\x1b":
+                    menu = not menu
+                    continue
+                if not menu:
+                    if event.key == pygame.K_LEFT or event.unicode.lower() == "a":
+                        player.update("L")
+                    if event.key == pygame.K_RIGHT or event.unicode.lower() == "d":
+                        player.update("R")
+                    if event.key == pygame.K_UP or event.unicode.lower() == "w":
+                        player.update("U")
+                    if event.key == pygame.K_DOWN or event.unicode.lower() == "s":
+                        player.update("D")
             elif event.type == pygame.KEYUP:
                 player.update("S")
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if back_button.pressed(pygame.mouse.get_pos()):
+                    menu = False
+                elif exit_button.pressed(pygame.mouse.get_pos()):
+                    running = False
+                    terminate()
             elif event.type == pygame.USEREVENT:
                 current_station = pygame.mixer.Sound("sounds/" + STATIONS_SOUNDS[num])
                 current_station.play()
@@ -539,12 +590,19 @@ if __name__ == '__main__':
 
         for sprite in all_groups:
             camera.apply(sprite)
-        # if pygame.mouse.get_focused():
-        #   draw_cursor(*pygame.mouse.get_pos())
         # all_groups.draw(screen)
         wagon_group.draw(screen)
         icon_group.draw(screen)
         player_group.draw(screen)
+
+        if pygame.mouse.get_focused() and menu:
+            draw_buttons(fon_menu, 255, 1, 0, 433, 34, 500, 700, 0, " ", 255, 1, 0)
+            draw_buttons(menu_button, 255, 204, 0, 558, 59, 250, 60, 0, menu_text[0], 255, 1, 0)
+            draw_buttons(time_button, 255, 255, 255, 518, 150, 330, 100, 0, menu_text[1], 0, 0, 0)
+            draw_buttons(sound_button, 255, 255, 255, 520, 341, 330, 60, 0, menu_text[2], 0, 0, 0)
+            draw_buttons(back_button, 255, 255, 255, 519, 461, 330, 60, 0, menu_text[3], 0, 0, 0)
+            draw_buttons(exit_button, 255, 255, 255, 518, 649, 330, 60, 0, menu_text[4], 0, 0, 0)
+            draw_cursor(*pygame.mouse.get_pos())
 
         pygame.display.flip()
         clock.tick(FPS)
