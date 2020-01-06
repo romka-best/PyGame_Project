@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 import pygame
 import sqlite3
 
@@ -59,8 +60,10 @@ clock = pygame.time.Clock()
 start_menu_sprites = pygame.sprite.Group()
 all_groups = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
+people_group = pygame.sprite.Group()
 wagon_group = pygame.sprite.Group()
 icon_group = pygame.sprite.Group()
+fon_group = pygame.sprite.Group()
 
 
 def load_image(name, color_key=None):
@@ -82,6 +85,14 @@ def load_image(name, color_key=None):
 def terminate():
     pygame.quit()
     sys.exit()
+
+
+def count_time():
+    finish = time.time()
+    result_sec = finish - start
+    result_min = result_sec / 60
+    result_sec = result_sec % 60 * 60
+    return int(result_min), int(result_sec) // 100
 
 
 def draw_cursor(x, y):
@@ -305,6 +316,16 @@ class Wagon(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
 
 
+class FonWagon(pygame.sprite.Sprite):
+
+    def __init__(self, image, left):
+        super().__init__(fon_group, all_groups)
+        self.image = pygame.image.load(image)
+        self.rect = self.image.get_rect()
+        self.rect.left = left
+        self.rect.top = 0
+
+
 class Map(pygame.sprite.Sprite):
     image = pygame.transform.scale(pygame.image.load("images/map_icon.png"), (128, 128))
 
@@ -363,7 +384,7 @@ class Player(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect()
         self.rect.left = 576
-        self.rect.top = 306
+        self.rect.top = 340
         self.cur_frame = 0
         self.mask = pygame.mask.from_surface(self.image)
         self.last = None
@@ -426,6 +447,7 @@ class Camera:
     def update(self, target):
         self.dx = -(target.rect.x + target.rect.w // 2 - WIDTH // 2)
         self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
+        self.dy += 170
 
 
 class Board:
@@ -497,11 +519,9 @@ class Button:
         return surface
 
     def pressed(self, mouse):
-        if mouse[0] > self.rect.topleft[0]:
-            if mouse[1] > self.rect.topleft[1]:
-                if mouse[0] < self.rect.bottomright[0]:
-                    if mouse[1] < self.rect.bottomright[1]:
-                        return True
+        if self.rect.topleft[0] < mouse[0] < self.rect.bottomright[0] and self.rect.topleft[1] < mouse[1] < \
+                self.rect.bottomright[1]:
+            return True
         return False
 
 
@@ -528,7 +548,7 @@ if __name__ == '__main__':
     pygame.mixer_music.load("sounds/Cyberpunk Moonlight Sonata v2.mp3")
     flags = [False, False, False, False, False, False]
     menu = False
-    menu_text = ["Меню", "Время: ", "Вкл/Выкл звук", "Назад", "Выход из игры"]
+    menu_text = ["Меню", "Время: ", "Управление", "Назад", "Выход из игры"]
     fon_menu = Button()
     menu_button = Button()
     exit_button = Button()
@@ -538,18 +558,22 @@ if __name__ == '__main__':
 
     camera = Camera()
     player = Player()
-    last_wagon = Wagon("wagon7", -3773, 34)
-    last_prohod = Wagon("prohod6", -3917, 34)
-    last_cabin = Wagon("cabin_rot", 823, 34)
+    last_wagon = Wagon("wagon7", -3773, 68)
+    last_prohod = Wagon("prohod6", -3917, 68)
+    last_cabin = Wagon("cabin_rot", 823, 68)
     backpack = Backpack()
     map = Map(STATIONS[0][0])
+    directory = "images/fons/Fon_Kommunarka/"
+    images = os.listdir(directory)
+    left = -32784
+    for i in range(len(images)):
+        if images[i].startswith("image"):
+            FonWagon(directory + images[i], left)
+            left += 3415
     num = -2
-    station = pygame.mixer.Sound("sounds/" + STATIONS_SOUNDS[num])
-    del STATIONS_SOUNDS[num]
-    num = -1
-    station.play()
     # pygame.mixer_music.play(-1)
     running = True
+    start = time.time()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -570,7 +594,8 @@ if __name__ == '__main__':
                         player.update("D")
             elif event.type == pygame.KEYUP:
                 player.update("S")
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN and menu:
+                CLICK.play()
                 if back_button.pressed(pygame.mouse.get_pos()):
                     menu = False
                 elif exit_button.pressed(pygame.mouse.get_pos()):
@@ -591,6 +616,7 @@ if __name__ == '__main__':
         for sprite in all_groups:
             camera.apply(sprite)
         # all_groups.draw(screen)
+        fon_group.draw(screen)
         wagon_group.draw(screen)
         icon_group.draw(screen)
         player_group.draw(screen)
@@ -598,7 +624,7 @@ if __name__ == '__main__':
         if pygame.mouse.get_focused() and menu:
             draw_buttons(fon_menu, 255, 1, 0, 433, 34, 500, 700, 0, " ", 255, 1, 0)
             draw_buttons(menu_button, 255, 204, 0, 558, 59, 250, 60, 0, menu_text[0], 255, 1, 0)
-            draw_buttons(time_button, 255, 255, 255, 518, 150, 330, 100, 0, menu_text[1], 0, 0, 0)
+            draw_buttons(time_button, 255, 255, 255, 518, 150, 330, 100, 0, menu_text[1] + str(count_time()), 0, 0, 0)
             draw_buttons(sound_button, 255, 255, 255, 520, 341, 330, 60, 0, menu_text[2], 0, 0, 0)
             draw_buttons(back_button, 255, 255, 255, 519, 461, 330, 60, 0, menu_text[3], 0, 0, 0)
             draw_buttons(exit_button, 255, 255, 255, 518, 649, 330, 60, 0, menu_text[4], 0, 0, 0)
