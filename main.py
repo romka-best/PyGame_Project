@@ -13,7 +13,7 @@ HEIGHT = 768
 STEP = 50
 TIMEBETWEENSTATIONS = 150000
 TIME = 15000
-CURSOR = pygame.image.load("images/cursor.png")
+CURSOR = pygame.image.load("images/icons/cursor.png")
 CLICK = pygame.mixer.Sound("sounds/click.ogg")
 STATIONS_SOUNDS = []
 STATIONS = [("Коммунарка",),
@@ -49,9 +49,8 @@ for sound in range(len(sounds)):
         STATIONS_SOUNDS.append(sounds[sound])
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
-# screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Красная ветка")
-pygame.display.set_icon(pygame.image.load("images/icon.png"))
+pygame.display.set_icon(pygame.image.load("images/icons/icon.png"))
 pygame.mouse.set_visible(0)
 pygame.time.set_timer(pygame.USEREVENT, TIMEBETWEENSTATIONS)
 # pygame.time.set_timer(31, TIME)
@@ -88,7 +87,7 @@ def terminate():
 
 
 def count_time():
-    finish = time.time()
+    finish = time.monotonic()
     result_sec = finish - start
     result_min = result_sec / 60
     result_sec = result_sec % 60 * 60
@@ -292,6 +291,15 @@ class Avatar:
         return False
 
 
+class Mood(pygame.sprite.Sprite):
+    def __init__(self, image):
+        super().__init__(icon_group)
+        self.image = pygame.image.load(image)
+        self.rect = self.image.get_rect()
+        self.rect.left = 910
+        self.rect.top = 680
+
+
 class Wagon(pygame.sprite.Sprite):
     image_wagon = pygame.image.load("images/Вагон.png")
     image_cabin = pygame.image.load("images/Кабинка машиниста.png")
@@ -327,7 +335,7 @@ class FonWagon(pygame.sprite.Sprite):
 
 
 class Map(pygame.sprite.Sprite):
-    image = pygame.transform.scale(pygame.image.load("images/map_icon.png"), (128, 128))
+    image = pygame.transform.scale(pygame.image.load("images/icons/map_icon.png"), (128, 128))
 
     def __init__(self, current_station):
         super().__init__(icon_group)
@@ -344,25 +352,74 @@ class Map(pygame.sprite.Sprite):
         return self.current_station
 
 
-class Backpack(pygame.sprite.Sprite):
-    image = pygame.transform.scale(pygame.image.load("images/backpack.png"), (128, 128))
+class Board:
+    # Конструктор поля
+    def __init__(self, width=7, height=7, left=333, top=34, cell_size=100):
+        self.width = width
+        self.height = height
+        self.board = [[0] * width for _ in range(height)]
+        self.left = 0
+        self.top = 0
+        self.cell_size = 0
+        self.set_view(left, top, cell_size)
+
+    # настройка внешнего вида
+    def set_view(self, left, top, cell_size):
+        self.left = left
+        self.top = top
+        self.cell_size = cell_size
+
+    # рисование поля
+    def render(self):
+        pygame.draw.rect(screen, pygame.Color("white"),
+                         (self.left, self.top,
+                          self.width * self.cell_size, self.height * self.cell_size))
+        for y in range(self.height):
+            for x in range(self.width):
+                pygame.draw.rect(screen, pygame.Color("black"),
+                                 (x * self.cell_size + self.left, y * self.cell_size + self.top,
+                                  self.cell_size, self.cell_size), 1)
+
+    def on_click(self, cell):
+        pass
+
+    def get_click(self, mouse_pos):
+        cell = self.get_cell(mouse_pos)
+        if cell:
+            self.on_click(cell)
+
+    def get_cell(self, mouse_pos):
+        cell_x = (mouse_pos[0] - self.left) // self.cell_size
+        cell_y = (mouse_pos[1] - self.top) // self.cell_size
+        if cell_x < 0 or cell_x >= self.width or cell_y < 0 or cell_y >= self.height:
+            return None
+        return cell_x, cell_y
+
+
+class Backpack(pygame.sprite.Sprite, Board):
+    image = pygame.transform.scale(pygame.image.load("images/icons/backpack.png"), (100, 142))
 
     def __init__(self):
-        super().__init__(icon_group)
+        pygame.sprite.Sprite.__init__(self, icon_group)
+        Board.__init__(self)
         self.image = Backpack.image
         self.rect = self.image.get_rect()
         self.rect.left = 0
         self.rect.top = 0
+        self.opened = False
+
+    def open(self):
+        Board.render(self)
 
 
-class Dialog:
+class People(pygame.sprite.Sprite):
     pass
 
 
 class Player(pygame.sprite.Sprite):
-    image = pygame.image.load("images/character_malePerson_behindBack.png")
-    image_think = pygame.image.load("images/character_malePerson_think.png")
-    image_back = pygame.image.load("images/character_malePerson_back.png")
+    image = pygame.image.load("images/sprites/character_malePerson_behindBack.png")
+    image_think = pygame.image.load("images/sprites/character_malePerson_think.png")
+    image_back = pygame.image.load("images/sprites/character_malePerson_back.png")
 
     def __init__(self):
         super().__init__(player_group, all_groups)
@@ -373,14 +430,15 @@ class Player(pygame.sprite.Sprite):
         self.frames_down_right = []
         self.frames = [self.image, Player.image_think, Player.image_back, ]
         for i in range(6):
-            self.frames_right.append(pygame.image.load(f"images/character_malePerson_walk{i}.png"))
+            self.frames_right.append(pygame.image.load(f"images/sprites/character_malePerson_walk{i}.png"))
             self.frames_left.append(pygame.transform.flip(pygame.image.load
-                                                          (f"images/character_malePerson_walk{i}.png"), 1, 0))
+                                                          (f"images/sprites/character_malePerson_walk{i}.png"), 1, 0))
 
         for i in range(4):
-            self.frames_down_right.append(pygame.image.load(f'images/character_malePerson_crouch{i}.png'))
+            self.frames_down_right.append(pygame.image.load(f'images/sprites/character_malePerson_crouch{i}.png'))
             self.frames_down_left.append(pygame.transform.flip(pygame.image.load
-                                                               (f'images/character_malePerson_crouch{i}.png'), 1, 0))
+                                                               (f'images/sprites/character_malePerson_crouch{i}.png'),
+                                                               1, 0))
 
         self.rect = self.image.get_rect()
         self.rect.left = 576
@@ -450,46 +508,6 @@ class Camera:
         self.dy += 170
 
 
-class Board:
-    def __init__(self, width, height, left=10, top=10, cell_size=30):
-        self.width = width
-        self.height = height
-        self.board = [[0] * width for _ in range(height)]
-        self.left = 0
-        self.top = 0
-        self.cell_size = 0
-        self.set_view(left, top, cell_size)
-
-    def set_view(self, left, top, cell_size):
-        self.left = left
-        self.top = top
-        self.cell_size = cell_size
-
-    def render(self):
-        for y in range(self.height):
-            for x in range(self.width):
-                pygame.draw.rect(screen, pygame.Color("white"),
-                                 (x * self.cell_size + self.left,
-                                  y * self.cell_size + self.top,
-                                  self.cell_size, self.cell_size), 1)
-
-    def on_click(self, cell):
-        pass
-
-    def get_click(self, mouse_pos):
-        cell = self.get_cell(mouse_pos)
-        if cell:
-            self.on_click(cell)
-
-    def get_cell(self, mouse_pos):
-        cell_x = (mouse_pos[0] - self.left) // self.cell_size
-        cell_y = (mouse_pos[1] - self.top) // self.cell_size
-        if cell_x < 0 or cell_x >= self.width or \
-                cell_y < 0 or cell_y >= self.height:
-            return None
-        return cell_x, cell_y
-
-
 class Button:
     def create_button(self, surface, color, x, y, length, height, width, text, text_color):
         surface = self.draw_button(surface, color, length, height, x, y, width)
@@ -526,7 +544,7 @@ class Button:
 
 
 class Fon(pygame.sprite.Sprite):
-    image = pygame.transform.scale(pygame.image.load("images/fon.jpg"), (2000, 2000))
+    image = pygame.transform.scale(pygame.image.load("images/fons/fon.jpg"), (2000, 2000))
 
     def __init__(self):
         super().__init__(start_menu_sprites)
@@ -554,15 +572,23 @@ if __name__ == '__main__':
     exit_button = Button()
     back_button = Button()
     time_button = Button()
-    sound_button = Button()
+    control_button = Button()
 
     camera = Camera()
     player = Player()
     last_wagon = Wagon("wagon7", -3773, 68)
     last_prohod = Wagon("prohod6", -3917, 68)
     last_cabin = Wagon("cabin_rot", 823, 68)
+
     backpack = Backpack()
     map = Map(STATIONS[0][0])
+    # smartphone = Smarthone()
+    moods_dict = dict()
+    moods = os.listdir("images/mood/")
+    for i in range(len(moods)):
+        moods_dict[moods[i][4:-4]] = moods[i]
+    cur_mood = Mood("images/mood/" + moods_dict["60"])
+
     directory = "images/fons/Fon_Kommunarka/"
     images = os.listdir(directory)
     left = -32784
@@ -573,7 +599,7 @@ if __name__ == '__main__':
     num = -2
     # pygame.mixer_music.play(-1)
     running = True
-    start = time.time()
+    start = time.monotonic()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -592,6 +618,11 @@ if __name__ == '__main__':
                         player.update("U")
                     if event.key == pygame.K_DOWN or event.unicode.lower() == "s":
                         player.update("D")
+                    if event.unicode.lower() == "m":
+                        pass  # Взаимодействие с картой
+                    if event.unicode.lower() == "\t":
+                        # Взаимодействие с рюкзаком
+                        backpack.opened = not backpack.opened
             elif event.type == pygame.KEYUP:
                 player.update("S")
             elif event.type == pygame.MOUSEBUTTONDOWN and menu:
@@ -615,19 +646,21 @@ if __name__ == '__main__':
 
         for sprite in all_groups:
             camera.apply(sprite)
-        # all_groups.draw(screen)
         fon_group.draw(screen)
         wagon_group.draw(screen)
         icon_group.draw(screen)
         player_group.draw(screen)
 
-        if pygame.mouse.get_focused() and menu:
+        if menu:
             draw_buttons(fon_menu, 255, 1, 0, 433, 34, 500, 700, 0, " ", 255, 1, 0)
             draw_buttons(menu_button, 255, 204, 0, 558, 59, 250, 60, 0, menu_text[0], 255, 1, 0)
             draw_buttons(time_button, 255, 255, 255, 518, 150, 330, 100, 0, menu_text[1] + str(count_time()), 0, 0, 0)
-            draw_buttons(sound_button, 255, 255, 255, 520, 341, 330, 60, 0, menu_text[2], 0, 0, 0)
+            draw_buttons(control_button, 255, 255, 255, 520, 341, 330, 60, 0, menu_text[2], 0, 0, 0)
             draw_buttons(back_button, 255, 255, 255, 519, 461, 330, 60, 0, menu_text[3], 0, 0, 0)
             draw_buttons(exit_button, 255, 255, 255, 518, 649, 330, 60, 0, menu_text[4], 0, 0, 0)
+            draw_cursor(*pygame.mouse.get_pos())
+        elif backpack.opened:
+            backpack.render()
             draw_cursor(*pygame.mouse.get_pos())
 
         pygame.display.flip()
