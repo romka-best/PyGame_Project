@@ -53,7 +53,6 @@ pygame.display.set_caption("Красная ветка")
 pygame.display.set_icon(pygame.image.load("images/icons/icon.png"))
 pygame.mouse.set_visible(0)
 pygame.time.set_timer(pygame.USEREVENT, TIMEBETWEENSTATIONS)
-# pygame.time.set_timer(31, TIME)
 clock = pygame.time.Clock()
 
 start_menu_sprites = pygame.sprite.Group()
@@ -63,6 +62,25 @@ people_group = pygame.sprite.Group()
 wagon_group = pygame.sprite.Group()
 icon_group = pygame.sprite.Group()
 fon_group = pygame.sprite.Group()
+dialog_group = pygame.sprite.Group()
+emotes_group = pygame.sprite.Group()
+zombie_group = pygame.sprite.Group()
+
+
+def create_database(name):
+    con = sqlite3.connect("data/Players.db")
+    cur = con.cursor()
+    cur.execute(f"""INSERT INTO Player(Name, Time) VALUES({name}, 0)""")
+    con.commit()
+
+
+def update_database(name, time):
+    con = sqlite3.connect("data/Players.db")
+    cur = con.cursor()
+    cur.execute(f"""UPDATE Player
+SET Time = {time}
+WHERE Name = {name}""")
+    con.commit()
 
 
 def load_image(name, color_key=None):
@@ -171,69 +189,6 @@ def start_screen():
         clock.tick(FPS)
 
 
-def choice_avatar_screen():
-    text = ["Выберите аватар",
-            "----->",
-            "<-----"]
-
-    pygame.mixer_music.load("sounds/fon.wav")
-    pygame.mixer_music.play(-1)
-    start_button = Button()
-    page_button = Button()
-    AVATARS1 = {"bear": (105, 127),
-                "chick": (616, 127),
-                "cow": (1076, 320),
-                "crocodile": (367, 127),
-                "dog": (),
-                "duck": (),
-                "elephant": (),
-                "frog": (),
-                "giraffe": (),
-                "goat": (),
-                "gorilla": (),
-                "hippo": (),
-                "horse": (),
-                "monkey": (),
-                "moose": (),
-                "narwhal": (),
-                "owl": (),
-                "panda": (),
-                "parrot": (),
-                "penguin": (),
-                "pig": (),
-                "rabbit": (),
-                "rhino": (),
-                "sloth": (),
-                "snake": (),
-                "walrus": (),
-                "whale": (),
-                "zebra": ()
-                }
-    AVATARS2 = {}
-
-    running_choice_screen = True
-
-    while running_choice_screen:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running_choice_screen = False
-                terminate()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                CLICK.play()
-                if event.button == 1:
-                    if start_button.pressed(pygame.mouse.get_pos()):
-                        pass
-                    elif page_button.pressed(pygame.mouse.get_pos()):
-                        text[1], text[2] = text[2], text[1]
-        screen.fill(pygame.Color("black"))
-        draw_buttons(start_button, 255, 1, 0, 419, 36, 529, 75, 0, text[0], 255, 204, 0)
-        draw_buttons(page_button, 255, 1, 0, 419, 656, 529, 75, 0, text[1], 0, 0, 0)
-        if pygame.mouse.get_focused():
-            draw_cursor(*pygame.mouse.get_pos())
-        pygame.display.flip()
-        clock.tick(FPS)
-
-
 def choice_screen_name():
     text = ["Введите имя",
             "СТАРТ",
@@ -277,20 +232,6 @@ def choice_screen_name():
         clock.tick(FPS)
 
 
-class Avatar:
-    def __init__(self, name, pos):
-        self.image = pygame.transform.load(f"images/avatars/{name}")
-        self.rect = self.image.get_rect()
-        self.rect.left = pos[0]
-        self.rect.top = pos[1]
-
-    def pressed(self, mouse):
-        if self.rect.topleft[0] < mouse[0] < self.rect.bottomright[0] and self.rect.topleft[1] < mouse[1] < \
-                self.rect.bottomright[1]:
-            return True
-        return False
-
-
 class Mood(pygame.sprite.Sprite):
     def __init__(self, image):
         super().__init__(icon_group)
@@ -298,6 +239,9 @@ class Mood(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.left = 910
         self.rect.top = 680
+
+    def update(self, image):
+        self.image = pygame.image.load(image)
 
 
 class Wagon(pygame.sprite.Sprite):
@@ -336,20 +280,27 @@ class FonWagon(pygame.sprite.Sprite):
 
 class Map(pygame.sprite.Sprite):
     image = pygame.transform.scale(pygame.image.load("images/icons/map_icon.png"), (128, 128))
+    image2 = pygame.image.load("images/map_metro.png")
 
-    def __init__(self, current_station):
+    def __init__(self):
         super().__init__(icon_group)
         self.image = Map.image
         self.rect = self.image.get_rect()
         self.rect.left = 1238
         self.rect.top = 0
-        self.current_station = current_station
+        self.opened = False
 
-    def set_current_station(self, new_current_station):
-        self.current_station = new_current_station
-
-    def get_current_station(self):
-        return self.current_station
+    def update(self):
+        if self.opened:
+            self.image = Map.image2
+            self.rect = self.image.get_rect()
+            self.rect.left = 163
+            self.rect.top = -18
+        else:
+            self.image = Map.image
+            self.rect = self.image.get_rect()
+            self.rect.left = 1238
+            self.rect.top = 0
 
 
 class Board:
@@ -413,13 +364,86 @@ class Backpack(pygame.sprite.Sprite, Board):
 
 
 class People(pygame.sprite.Sprite):
-    pass
+    image_young1_stay = pygame.image.load("images/sprites/Молодой1 стоит.png")
+    image_young1_sit = pygame.image.load("images/sprites/Молодой1 сидит.png")
+    image_young2_sit1 = pygame.image.load("images/sprites/Молодой2 сидит1.png")
+    image_young2_sit2 = pygame.image.load("images/sprites/Молодой2 сидит2.png")
+    image_young2_stay = pygame.image.load("images/sprites/Молодой2 стоит.png")
+
+    def __init__(self, type, left, top):
+        super().__init__(people_group, all_groups)
+        if type == "young1":
+            self.image = People.image_young1_sit
+            self.image2 = People.image_young1_stay
+            self.frames = []
+        elif type == "young2":
+            self.image = People.image_young2_sit1
+            self.image2 = People.image_young2_stay
+            self.frames = [People.image_young2_sit1, People.image_young2_sit2]
+        self.rect = self.image.get_rect()
+        self.rect.left = left
+        self.rect.top = top
+        self.cur_frame = 0
+        self.mask = pygame.mask.from_surface(self.image)
+        self.type = type
+        self.talk = True
+        self.emote = Emote(self.rect.left, self.rect.top - 65)
+
+    def update(self):
+        if self.type == "young1":
+            pass
+        elif self.type == "young2":
+            self.cur_frame = (self.cur_frame + 1) % len(self.frames)
+            self.image = self.frames[self.cur_frame]
+
+    def paint(self, flag):
+        global emote
+        emote = flag
+
+
+class Emote(pygame.sprite.Sprite):
+    image_emote = pygame.transform.scale(pygame.image.load("images/emotes/emote_faceHappy.png"), (64, 76))
+
+    def __init__(self, left, top):
+        super().__init__(emotes_group, all_groups)
+        self.image = Emote.image_emote
+        self.rect = self.image.get_rect()
+        self.rect.left = left
+        self.rect.top = top
+        self.mask = pygame.mask.from_surface(self.image)
+
+
+class Dialog(pygame.sprite.Sprite):
+    image_left = pygame.image.load("images/Dialog_left.png")
+    image_right = pygame.image.load("images/Dialog_right.png")
+
+    def __init__(self):
+        super().__init__(dialog_group)
+        self.image_left = Dialog.image_left
+        self.image_right = Dialog.image_right
+        self.image = self.image_right
+        self.rect = self.image.get_rect()
+        self.rect.left = 183
+        self.rect.top = 407
+
+    def write_text(self, surface, text, length, height, x, y):
+        font_size = 30
+        myFont = pygame.font.Font("font/Roboto-Regular.ttf", font_size)
+        myText = myFont.render(text, 1, (0, 0, 0))
+        surface.blit(myText, ((x + length / 2) - myText.get_width() / 2, (y + height / 2) - myText.get_height() / 2))
+        return surface
+
+    def print_text(self, text, y):  # 15px <->
+        return self.write_text(screen, text, 980, 30, 200, y)
 
 
 class Player(pygame.sprite.Sprite):
     image = pygame.image.load("images/sprites/character_malePerson_behindBack.png")
     image_think = pygame.image.load("images/sprites/character_malePerson_think.png")
     image_back = pygame.image.load("images/sprites/character_malePerson_back.png")
+    image_interract = pygame.image.load("images/sprites/character_malePerson_interact.png")
+    image_interract_rot = pygame.transform.flip(pygame.image.load("images/sprites/character_malePerson_interact.png"),
+                                                1, 0)
 
     def __init__(self):
         super().__init__(player_group, all_groups)
@@ -428,16 +452,17 @@ class Player(pygame.sprite.Sprite):
         self.frames_right = []
         self.frames_down_left = []
         self.frames_down_right = []
-        self.frames = [self.image, Player.image_think, Player.image_back, ]
+        self.frames = [self.image, Player.image_think, Player.image_back, Player.image_interract,
+                       Player.image_interract_rot]
         for i in range(6):
             self.frames_right.append(pygame.image.load(f"images/sprites/character_malePerson_walk{i}.png"))
             self.frames_left.append(pygame.transform.flip(pygame.image.load
                                                           (f"images/sprites/character_malePerson_walk{i}.png"), 1, 0))
 
-        for i in range(4):
-            self.frames_down_right.append(pygame.image.load(f'images/sprites/character_malePerson_crouch{i}.png'))
+        for j in range(4):
+            self.frames_down_right.append(pygame.image.load(f'images/sprites/character_malePerson_crouch{j}.png'))
             self.frames_down_left.append(pygame.transform.flip(pygame.image.load
-                                                               (f'images/sprites/character_malePerson_crouch{i}.png'),
+                                                               (f'images/sprites/character_malePerson_crouch{j}.png'),
                                                                1, 0))
 
         self.rect = self.image.get_rect()
@@ -460,6 +485,11 @@ class Player(pygame.sprite.Sprite):
                         self.image = self.frames[1]
                         player.rect.x += STEP
                         break
+            for j in people_group:
+                if pygame.sprite.collide_mask(self, j) and j.talk:
+                    j.paint(True)
+                else:
+                    j.paint(False)
         elif who == "R":
             self.cur_frame = (self.cur_frame + 1) % len(self.frames_right)
             self.image = self.frames_right[self.cur_frame]
@@ -471,9 +501,26 @@ class Player(pygame.sprite.Sprite):
                         self.image = self.frames[1]
                         player.rect.x -= STEP
                         break
+            for j in people_group:
+                if pygame.sprite.collide_mask(self, j) and j.talk:
+                    j.paint(True)
+                else:
+                    j.paint(False)
         elif who == "U":
             self.image = self.frames[2]
             self.cur_frame = 2
+            return
+        elif who == "K":
+            if self.last == "R":
+                self.image = self.frames[3]
+                self.cur_frame = 3
+            elif self.last == "L":
+                self.image = self.frames[4]
+                self.cur_frame = 4
+            for i in zombie_group:
+                if pygame.sprite.collide_mask(self, i):
+                    zombies[i.num].who = "D"
+            return
         elif who == "D":
             if self.cur_frame != 3:
                 self.cur_frame = (self.cur_frame + 1) % len(self.frames_down_right)
@@ -482,12 +529,76 @@ class Player(pygame.sprite.Sprite):
             elif self.last == "L":
                 self.image = self.frames_down_left[self.cur_frame]
             return
-
         else:
             self.image = self.frames[0]
             self.cur_frame = 0
+            for j in people_group:
+                if pygame.sprite.collide_mask(self, j):
+                    j.paint(True)
+                else:
+                    j.paint(False)
             return
         self.last = who
+
+
+class Zombie(pygame.sprite.Sprite):
+    image = pygame.image.load("images/zombie/character_zombie_think.png")
+
+    def __init__(self, left, top, num):
+        super().__init__(zombie_group, all_groups)
+        self.image = Zombie.image
+        self.frames_left = []
+        self.frames_right = []
+        self.frames_kick = []
+        for i in range(6):
+            self.frames_right.append(pygame.image.load(f"images/zombie/character_zombie_walk{i}.png"))
+            self.frames_left.append(pygame.transform.flip(pygame.image.load
+                                                          (f"images/zombie/character_zombie_walk{i}.png"), 1, 0))
+        for i in range(3):
+            self.frames_kick.append(pygame.image.load(f"images/zombie/character_zombie_attack{i}.png"))
+        self.rect = self.image.get_rect()
+        self.rect.left = left
+        self.rect.top = top
+        self.cur_frame = 0
+        self.cur_frame_kick = 0
+        self.mask = pygame.mask.from_surface(self.image)
+        self.who = "R"
+        self.step = 5
+        self.num = num
+        self.dead = False
+
+    def update(self):
+        global prozent
+        if self.who == "L":
+            self.cur_frame = (self.cur_frame + 1) % len(self.frames_left)
+            self.image = self.frames_left[self.cur_frame]
+            zombies[self.num].rect.x -= self.step
+            for i in player_group:
+                if pygame.sprite.collide_mask(self, i) and i.image != i.frames[2]:
+                    self.cur_frame_kick = (self.cur_frame_kick + 1) % len(self.frames_kick)
+                    self.image = self.frames_kick[self.cur_frame_kick]
+                    zombies[self.num].rect.x += self.step
+                    prozent -= 1
+                    break
+            for i in wagon_group:
+                if i.type == "cabin" and pygame.sprite.collide_mask(self, i):
+                    self.who = "R"
+        elif self.who == "R":
+            self.cur_frame = (self.cur_frame + 1) % len(self.frames_right)
+            self.image = self.frames_right[self.cur_frame]
+            zombies[self.num].rect.x += self.step
+            for i in player_group:
+                if pygame.sprite.collide_mask(self, i) and i.image != i.frames[2]:
+                    self.cur_frame_kick = (self.cur_frame_kick + 1) % len(self.frames_kick)
+                    self.image = self.frames_kick[self.cur_frame_kick]
+                    zombies[self.num].rect.x -= self.step
+                    prozent -= 1
+                    break
+            for i in wagon_group:
+                if i.type == "cabin_rot" and pygame.sprite.collide_mask(self, i):
+                    self.who = "L"
+        elif self.who == "D":
+            self.image = Zombie.image
 
 
 class Camera:
@@ -561,11 +672,12 @@ class Fon(pygame.sprite.Sprite):
 
 if __name__ == '__main__':
     start_screen()
-    # choice_avatar_screen() Не до конца
     # choice_screen_name() Не до конца
     pygame.mixer_music.load("sounds/Cyberpunk Moonlight Sonata v2.mp3")
     flags = [False, False, False, False, False, False]
     menu = False
+    dialog = True
+    emote = False
     menu_text = ["Меню", "Время: ", "Управление", "Назад", "Выход из игры"]
     fon_menu = Button()
     menu_button = Button()
@@ -574,20 +686,27 @@ if __name__ == '__main__':
     time_button = Button()
     control_button = Button()
 
+    dialog_main = Dialog()
     camera = Camera()
     player = Player()
-    last_wagon = Wagon("wagon7", -3773, 68)
-    last_prohod = Wagon("prohod6", -3917, 68)
-    last_cabin = Wagon("cabin_rot", 823, 68)
+    cur_text = "Мне нужно дойти до последнего вагона любой ценой!"
+    cur_text2 = "(До того, как поезд доедет до последней станции)"
+    people = [People("young1", -333, 306)]
+    zombies = [Zombie(0, -3773, 0), Zombie(-8656, 498, 1)]
+    wagons = [Wagon("cabin", -32749, 68), Wagon("wagon1", -32208, 68), Wagon("prohod1", -27612, 68),
+              Wagon("wagon2", -27469, 68), Wagon("prohod2", -22873, 68), Wagon("wagon3", -22730, 68),
+              Wagon("prohod3", -18134, 68), Wagon("wagon4", -17991, 68), Wagon("prohod4", -13395, 68),
+              Wagon("wagon5", -13252, 68), Wagon("prohod5", -8656, 68), Wagon("wagon6", -8513, 68),
+              Wagon("prohod6", -3917, 68), Wagon("wagon7", -3773, 68), Wagon("cabin_rot", 823, 68)]
 
     backpack = Backpack()
-    map = Map(STATIONS[0][0])
-    # smartphone = Smarthone()
+    map = Map()
     moods_dict = dict()
     moods = os.listdir("images/mood/")
     for i in range(len(moods)):
         moods_dict[moods[i][4:-4]] = moods[i]
-    cur_mood = Mood("images/mood/" + moods_dict["60"])
+    prozent = 60
+    cur_mood = Mood("images/mood/" + moods_dict[str(prozent)])
 
     directory = "images/fons/Fon_Kommunarka/"
     images = os.listdir(directory)
@@ -618,10 +737,14 @@ if __name__ == '__main__':
                         player.update("U")
                     if event.key == pygame.K_DOWN or event.unicode.lower() == "s":
                         player.update("D")
+                    if event.unicode.lower() == "f" and emote:
+                        if prozent < 100:
+                            prozent += 1
+                    if event.unicode.lower() == "e":
+                        player.update("K")
                     if event.unicode.lower() == "m":
-                        pass  # Взаимодействие с картой
+                        map.opened = not map.opened
                     if event.unicode.lower() == "\t":
-                        # Взаимодействие с рюкзаком
                         backpack.opened = not backpack.opened
             elif event.type == pygame.KEYUP:
                 player.update("S")
@@ -640,6 +763,8 @@ if __name__ == '__main__':
                     num = -2
                 elif num == -2:
                     num = -1
+                if not len(STATIONS):
+                    pass  # Проиграл
 
         screen.fill(pygame.Color("black"))
         camera.update(player)
@@ -648,8 +773,14 @@ if __name__ == '__main__':
             camera.apply(sprite)
         fon_group.draw(screen)
         wagon_group.draw(screen)
-        icon_group.draw(screen)
+        people_group.draw(screen)
+        if emote:
+            emotes_group.draw(screen)
+        for num in range(len(zombies)):
+            zombies[num].update()
+        zombie_group.draw(screen)
         player_group.draw(screen)
+        icon_group.draw(screen)
 
         if menu:
             draw_buttons(fon_menu, 255, 1, 0, 433, 34, 500, 700, 0, " ", 255, 1, 0)
@@ -659,10 +790,25 @@ if __name__ == '__main__':
             draw_buttons(back_button, 255, 255, 255, 519, 461, 330, 60, 0, menu_text[3], 0, 0, 0)
             draw_buttons(exit_button, 255, 255, 255, 518, 649, 330, 60, 0, menu_text[4], 0, 0, 0)
             draw_cursor(*pygame.mouse.get_pos())
+        elif dialog:
+            dialog_group.draw(screen)
+            dialog_main.print_text(cur_text, 481)
+            dialog_main.print_text(cur_text2, 581)
+            if count_time()[1] >= 5:
+                dialog = False
         elif backpack.opened:
             backpack.render()
             draw_cursor(*pygame.mouse.get_pos())
+        elif map.opened:
+            map.update()
 
+        if prozent == 0:
+            pass  # Проигрыш
+        elif 5 <= prozent <= 100:
+            try:
+                cur_mood.update("images/mood/" + moods_dict[str(prozent)])
+            except KeyError:
+                pass
         pygame.display.flip()
         clock.tick(FPS)
 
