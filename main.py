@@ -20,83 +20,83 @@ STATIONS_SOUNDS = []  # Массив из звуков станций
 # Заранее спамлю зомби
 STATIONS = [("Коммунарка", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                             randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                            randrange(-32208, -3713)]),
+                            randrange(-32208, -3713)], "images/fons/Fon_Kommunarka/"),
             ("Ольховая", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                           randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                          randrange(-32208, -3713)]),
+                          randrange(-32208, -3713)], "images/fons/Fon_Olhovaya/"),
             ("Прокшино", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                           randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                          randrange(-32208, -3713)]),
+                          randrange(-32208, -3713)], "images/fons/Fon_Prokshino/"),
             ("Филатов Луг", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                              randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                             randrange(-32208, -3713)]),
+                             randrange(-32208, -3713)], "images/fons/Fon_Filatov/"),
             ("Саларьево", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                            randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                           randrange(-32208, -3713)]),
+                           randrange(-32208, -3713)], "images/fons/Fon_Salaryevo/"),
             ("Румянцево", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                            randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                           randrange(-32208, -3713)]),
+                           randrange(-32208, -3713)], "images/fons/Fon_Rumyanzevo/"),
             ("Тропарёво", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                            randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                           randrange(-32208, -3713)]),
+                           randrange(-32208, -3713)], "images/fons/Troparevo/"),
             ("Юго-Западная", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                               randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                              randrange(-32208, -3713)]),
+                              randrange(-32208, -3713)], "images/fons/Fon_Ugo-Zapadnaya/"),
             ("Проспект Вернадского", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                                       randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                                      randrange(-32208, -3713)]),
+                                      randrange(-32208, -3713)], "images/fons/Fon_Prospekt/"),
             ("Университет", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                              randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                             randrange(-32208, -3713)]),
+                             randrange(-32208, -3713)], "images/fons/Fon_Universitet/"),
             ("Воробьёвы горы", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                                 randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                                randrange(-32208, -3713)]),
+                                randrange(-32208, -3713)], "images/fons/Fon_Vorobevy/"),
             ("Спортивная", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                             randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                            randrange(-32208, -3713)]),
+                            randrange(-32208, -3713)], "images/fons/Fon_Sportivnaya/"),
             ("Фрунзенская", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                              randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                             randrange(-32208, -3713)]),
+                             randrange(-32208, -3713)], "images/fons/Fon_Frunzenskaya/"),
             ("Парк культуры", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                                randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                               randrange(-32208, -3713)]),
+                               randrange(-32208, -3713)], "images/fons/Fon_Park/"),
             ("Кропоткинская", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                                randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                               randrange(-32208, -3713)]),
+                               randrange(-32208, -3713)], "images/fons/Fon_Kropotkinskaya/"),
             ("Библиотека имени Ленина",
              [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
               randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-              randrange(-32208, -3713)]),
+              randrange(-32208, -3713)], "images/fons/Fon_Biblioteka/"),
             ("Охотный Ряд", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                              randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                             randrange(-32208, -3713)]),
+                             randrange(-32208, -3713)], "images/fons/Fon_Ohotnyi/"),
             ("Лубянка", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                          randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                         randrange(-32208, -3713)]),
+                         randrange(-32208, -3713)], "images/fons/Fon_Lubyanka/"),
             ("Чистые пруды", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                               randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                              randrange(-32208, -3713)]),
+                              randrange(-32208, -3713)], "images/fons/Fon_Chistye/"),
             ("Красные Ворота", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                                 randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                                randrange(-32208, -3713)]),
+                                randrange(-32208, -3713)], "images/fons/Fon_Krasnye/"),
             ("Комсомольская", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                                randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                               randrange(-32208, -3713)]),
+                               randrange(-32208, -3713)], "images/fons/Fon_Komsomolskaya/"),
             ("Красносельская", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                                 randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
                                 randrange(-32208, -3713)]),
             ("Сокольники", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                             randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                            randrange(-32208, -3713)]),
+                            randrange(-32208, -3713)], "images/fons/Fon_Sokolniki/"),
             ("Преображенская площадь", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                                         randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                                        randrange(-32208, -3713)]),
+                                        randrange(-32208, -3713)], "images/fons/Fon_Preobrazhenskaya/"),
             ("Черкизовская", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                               randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                              randrange(-32208, -3713)]),
+                              randrange(-32208, -3713)], "images/fons/Fon_Cherkizovskaya/"),
             ("Бульвар Рокоссовского", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
                                        randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                                       randrange(-32208, -3713)])]
+                                       randrange(-32208, -3713)], "images/fons/Fon_Bulvar/")]
 name = None  # Переменная, где хранится имя
 # Кладу в массив пути к звукам станций
 directory = "sounds/"
@@ -296,11 +296,12 @@ def control_screen():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 CLICK.play()
                 if event.button == 1:
-                    if exit_button.pressed(pygame.mouse.get_pos()):  # Если нажал на выход, то выходям из функции
+                    if exit_button.pressed(pygame.mouse.get_pos()):  # Если нажал на выход, то выходим из функции
                         return
         screen.fill(pygame.Color("black"))
         control_menu_group.draw(screen)
         draw_buttons(exit_button, 255, 1, 0, 81, 44, 300, 70, 0, "Назад", 0, 0, 0)
+        screen.blit(Fon.image_control, (232, 164))
         if pygame.mouse.get_focused():
             draw_cursor(*pygame.mouse.get_pos())
         pygame.display.flip()
@@ -446,8 +447,9 @@ class FonWagon(pygame.sprite.Sprite):
         self.rect.left = left
         self.rect.top = 0
 
-    def update(self, image):
+    def update(self, image, left):
         self.image = pygame.image.load(image)
+        self.rect = self.image.get_rect()
 
 
 class Map(pygame.sprite.Sprite):
@@ -517,7 +519,7 @@ class Board:
 class Backpack(pygame.sprite.Sprite, Board):
     """Класс изображения рюкзака, и его внутренности"""
     image = pygame.transform.scale(pygame.image.load("images/icons/backpack.png"), (100, 142))
-    key = pygame.transform.scale(pygame.image.load("images/icons/key.png"), (64, 64))
+    key = pygame.transform.scale(pygame.image.load("images/icons/key.png"), (100, 100))
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self, icon_group)
@@ -527,8 +529,8 @@ class Backpack(pygame.sprite.Sprite, Board):
         self.rect.left = 0
         self.rect.top = 0
         self.opened = False
-        self.data = [None for i in range(7) for j in range(7)]
-        self.data[0] = Backpack.key
+        self.data = [[None for i in range(7)] for j in range(7)]
+        self.data[0][0] = Backpack.key
 
     def open(self):
         self.render()
@@ -543,40 +545,58 @@ class Backpack(pygame.sprite.Sprite, Board):
                 pygame.draw.rect(screen, pygame.Color("black"),
                                  (x * self.cell_size + self.left, y * self.cell_size + self.top,
                                   self.cell_size, self.cell_size), 1)
-                if self.data[x][y] is not None:
-                    py
+                if self.data[x][y] is not None:  # Если массив не пустой, то рисую предметы
+                    screen.blit(self.data[x][y], (x * self.cell_size + self.left, y * self.cell_size + self.top))
 
 
 class People(pygame.sprite.Sprite):
+    """Класс второстепенных персонажей"""
     image_young1_stay = pygame.image.load("images/sprites/Молодой1 стоит.png")
     image_young1_sit = pygame.image.load("images/sprites/Молодой1 сидит.png")
     image_young2_sit1 = pygame.image.load("images/sprites/Молодой2 сидит1.png")
     image_young2_sit2 = pygame.image.load("images/sprites/Молодой2 сидит2.png")
     image_young2_stay = pygame.image.load("images/sprites/Молодой2 стоит.png")
+    image_old1_stay = pygame.transform.flip(pygame.image.load("images/sprites/Дедушка стоит.png"), 1, 0)
+    image_teenager1M_stay = pygame.image.load("images/sprites/Подросток М стоит.png")
+    image_teenager1W_stay = pygame.transform.flip(pygame.image.load("images/sprites/Подросток Ж стоит.png"), 1, 0)
+    image_miniboss_pair1 = pygame.image.load("images/sprites/Пара стоит1.png")
+    image_miniboss_pair2 = pygame.image.load("images/sprites/Пара стоит2.png")
 
-    def __init__(self, type, left, top):
+    def __init__(self, type, left, top):  # Задаю "заводские" настройки
         super().__init__(people_group, all_groups)
         if type == "young1":
             self.image = People.image_young1_sit
-            self.image2 = People.image_young1_stay
-            self.frames = []
+            self.name_emote = "emote_faceHappy.png"
         elif type == "young2":
             self.image = People.image_young2_sit1
-            self.image2 = People.image_young2_stay
-            self.frames = [People.image_young2_sit1, People.image_young2_sit2]
+            self.image2 = People.image_young2_sit2
+            self.frames = [self.image, self.image2]
+            self.name_emote = "emote_laugh.png"
+        elif type == "oldman1":
+            self.image = People.image_old1_stay
+            self.name_emote = "emote_sleeps.png"
+        elif type == "teenagerM1":
+            self.image = People.image_teenager1M_stay
+            self.name_emote = "emote_hearts.png"
+        elif type == "teenagerW1":
+            self.image = People.image_teenager1W_stay
+            self.name_emote = "emote_cash.png"
+        elif type == "minibosspair":
+            self.image = People.image_miniboss_pair1
+            self.image2 = People.image_miniboss_pair2
+            self.frames = [self.image, self.image2]
+            self.name_emote = "emote_heart.png"
         self.rect = self.image.get_rect()
         self.rect.left = left
         self.rect.top = top
         self.cur_frame = 0
         self.mask = pygame.mask.from_surface(self.image)
         self.type = type
+        self.emote = Emote(self.name_emote, self.rect.left, self.rect.top - 65)
         self.talk = True
-        self.emote = Emote(self.rect.left, self.rect.top - 65)
 
     def update(self):
-        if self.type == "young1":
-            pass
-        elif self.type == "young2":
+        if self.type == "minibosspair" or self.type == "young2":
             self.cur_frame = (self.cur_frame + 1) % len(self.frames)
             self.image = self.frames[self.cur_frame]
 
@@ -586,11 +606,11 @@ class People(pygame.sprite.Sprite):
 
 
 class Emote(pygame.sprite.Sprite):
-    image_emote = pygame.transform.scale(pygame.image.load("images/emotes/emote_faceHappy.png"), (64, 76))
+    """Класс эмоций (Иконик повверх второстепенных персонажей)"""
 
-    def __init__(self, left, top):
+    def __init__(self, image, left, top):
         super().__init__(emotes_group, all_groups)
-        self.image = Emote.image_emote
+        self.image = pygame.transform.scale(pygame.image.load("images/emotes/" + image), (64, 76))
         self.rect = self.image.get_rect()
         self.rect.left = left
         self.rect.top = top
@@ -598,6 +618,7 @@ class Emote(pygame.sprite.Sprite):
 
 
 class Dialog(pygame.sprite.Sprite):
+    """Класс диалогов, в дальнейшем планирую развивать эту тему"""
     image_left = pygame.image.load("images/Dialog_left.png")
     image_right = pygame.image.load("images/Dialog_right.png")
 
@@ -612,9 +633,9 @@ class Dialog(pygame.sprite.Sprite):
 
     def write_text(self, surface, text, length, height, x, y):
         font_size = 30
-        myFont = pygame.font.Font("font/Roboto-Regular.ttf", font_size)
-        myText = myFont.render(text, 1, (0, 0, 0))
-        surface.blit(myText, ((x + length / 2) - myText.get_width() / 2, (y + height / 2) - myText.get_height() / 2))
+        my_font = pygame.font.Font("font/Roboto-Regular.ttf", font_size)
+        my_text = my_font.render(text, 1, (0, 0, 0))
+        surface.blit(my_text, ((x + length / 2) - my_text.get_width() / 2, (y + height / 2) - my_text.get_height() / 2))
         return surface
 
     def print_text(self, text, y):  # 15px <->
@@ -622,6 +643,7 @@ class Dialog(pygame.sprite.Sprite):
 
 
 class Player(pygame.sprite.Sprite):
+    """Класс главного героя"""
     image = pygame.image.load("images/sprites/character_malePerson_behindBack.png")
     image_think = pygame.image.load("images/sprites/character_malePerson_think.png")
     image_back = pygame.image.load("images/sprites/character_malePerson_back.png")
@@ -629,7 +651,7 @@ class Player(pygame.sprite.Sprite):
     image_interract_rot = pygame.transform.flip(pygame.image.load("images/sprites/character_malePerson_interact.png"),
                                                 1, 0)
 
-    def __init__(self):
+    def __init__(self):  # Инициализиирую объёкт класса Player
         super().__init__(player_group, all_groups)
         self.image = Player.image
         self.frames_left = []
@@ -656,7 +678,8 @@ class Player(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.last = None
 
-    def update(self, *args):
+    def update(self, *args):  # В зависимости от нажатой кнопки, меняются спрайты
+        global prozent
         who = args[0]
         if who == "L":
             self.cur_frame = (self.cur_frame + 1) % len(self.frames_left)
@@ -675,6 +698,7 @@ class Player(pygame.sprite.Sprite):
             for j in people_group:
                 if pygame.sprite.collide_mask(self, j) and j.talk:
                     j.paint(True)
+                    break
                 else:
                     j.paint(False)
         elif who == "R":
@@ -691,12 +715,17 @@ class Player(pygame.sprite.Sprite):
             for j in people_group:
                 if pygame.sprite.collide_mask(self, j) and j.talk:
                     j.paint(True)
+                    break
                 else:
                     j.paint(False)
         elif who == "U":
             self.image = self.frames[2]
             self.cur_frame = 2
             return
+        elif who == "F":
+            for j in people_group:
+                if pygame.sprite.collide_mask(self, j) and (j.type == "young1" or j.type == "young2"):
+                    prozent += 1
         elif who == "K":
             if self.last == "R":
                 self.image = self.frames[3]
@@ -722,6 +751,7 @@ class Player(pygame.sprite.Sprite):
             for j in people_group:
                 if pygame.sprite.collide_mask(self, j):
                     j.paint(True)
+                    break
                 else:
                     j.paint(False)
             return
@@ -729,6 +759,7 @@ class Player(pygame.sprite.Sprite):
 
 
 class Zombie(pygame.sprite.Sprite):
+    """Класс антагонистов Зомби"""
     image = pygame.image.load("images/zombie/character_zombie_think.png")
 
     def __init__(self, left, top, num):
@@ -750,11 +781,11 @@ class Zombie(pygame.sprite.Sprite):
         self.cur_frame_kick = 0
         self.mask = pygame.mask.from_surface(self.image)
         self.who = "R"
-        self.step = 5
+        self.step = 10
         self.num = num
         self.dead = False
 
-    def update(self):
+    def update(self):  # В заивсимости от пути Зомби, меняются спрайты
         global prozent
         if self.who == "L":
             self.cur_frame = (self.cur_frame + 1) % len(self.frames_left)
@@ -807,6 +838,8 @@ class Camera:
 
 
 class Button:
+    """Класс, который создаёт кнопки и пишет на них текст"""
+
     def create_button(self, surface, color, x, y, length, height, width, text, text_color):
         surface = self.draw_button(surface, color, length, height, x, y, width)
         surface = self.write_text(surface, text, text_color, length, height, x, y)
@@ -815,9 +848,9 @@ class Button:
 
     def write_text(self, surface, text, text_color, length, height, x, y):
         font_size = int(length // len(text))
-        myFont = pygame.font.Font("font/Roboto-Black.ttf", font_size)
-        myText = myFont.render(text, 1, text_color)
-        surface.blit(myText, ((x + length / 2) - myText.get_width() / 2, (y + height / 2) - myText.get_height() / 2))
+        my_font = pygame.font.Font("font/Roboto-Black.ttf", font_size)
+        my_text = my_font.render(text, 1, text_color)
+        surface.blit(my_text, ((x + length / 2) - my_text.get_width() / 2, (y + height / 2) - my_text.get_height() / 2))
         return surface
 
     def draw_button(self, surface, color, length, height, x, y, width):
@@ -842,7 +875,9 @@ class Button:
 
 
 class Fon(pygame.sprite.Sprite):
+    """Класс фонового изображения"""
     image = pygame.transform.scale(pygame.image.load("images/fons/fon.jpg"), (2000, 2000))
+    image_control = pygame.image.load("images/Control_menu.png")
 
     def __init__(self):
         super().__init__(start_menu_group)
@@ -857,15 +892,6 @@ class Fon(pygame.sprite.Sprite):
             self.rect.left -= 520
 
 
-"""class Image(pygame.sprite.Sprite):
-    image = pygame.image.load("images/control_image.jpg"))
-
-    def __init__(self):
-        super().__init__(control_menu_group)
-        self.image =Image.image
-        self.rect = self.image.get_rect()
-        self.rect.left = -634"""
-
 if __name__ == '__main__':
     start_screen()
     choice_screen_name()
@@ -874,7 +900,7 @@ if __name__ == '__main__':
     menu = False
     dialog = True
     emote = False
-    menu_text = ["Меню", "Время: ", "Управление", "Назад", "Выход из игры"]
+    menu_text = ["Меню", "Время: ", "Управление", "Продолжить", "Выход из игры"]
     fon_menu = Button()
     menu_button = Button()
     exit_button = Button()
@@ -887,8 +913,13 @@ if __name__ == '__main__':
     player = Player()
     cur_text = "Мне нужно дойти до кабинки машиниста любой ценой!"
     cur_text2 = "(До того, как поезд доедет до последней станции)"
-    people = [People("young1", -333, 306)]
-    zombies = [Zombie(-3773, 498, 0), Zombie(-8513, 498, 1), Zombie(-13252, 498, 2), Zombie(-17991, 498, 3)]
+    people = [People("young1", -333, 306), People("young2", -4192, 306), People("oldman1", -6865, 340),
+              People("teenagerM1", -27469, 340), People("teenagerW1", -23189, 340), People("minibosspair", -15821, 340)]
+    if level == "Лёгкий":
+        zombies = [Zombie(-3773, 498, 0), Zombie(-8513, 498, 1), Zombie(-13252, 498, 2), Zombie(-17991, 498, 3),
+                   Zombie(-22730, 498, 4)]
+    else:
+        zombies = [Zombie(-3773, 498, 0), Zombie(-8513, 498, 1), Zombie(-13252, 498, 2)]
     wagons = [Wagon("cabin", -32749, 68), Wagon("wagon1", -32208, 68), Wagon("prohod1", -27612, 68),
               Wagon("wagon2", -27469, 68), Wagon("prohod2", -22873, 68), Wagon("wagon3", -22730, 68),
               Wagon("prohod3", -18134, 68), Wagon("wagon4", -17991, 68), Wagon("prohod4", -13395, 68),
@@ -904,12 +935,13 @@ if __name__ == '__main__':
     prozent = 60
     cur_mood = Mood(moods_dict[str(prozent)])
 
+    fon_wagon_list = list()
     directory = "images/fons/Fon_Kommunarka/"
     images = os.listdir(directory)
     left = -32784
     for i in range(len(images)):
         if images[i].startswith("image"):
-            FonWagon(directory + images[i], left)
+            fon_wagon_list.append(FonWagon(directory + images[i], left))
             left += 3415
     num_st = -2
     # pygame.mixer_music.play(-1)
@@ -935,8 +967,7 @@ if __name__ == '__main__':
                     if event.key == pygame.K_DOWN or event.unicode.lower() == "s":
                         player.update("D")
                     if event.unicode.lower() == "f" and emote:
-                        if prozent < 100:
-                            prozent += 1
+                        player.update("F")
                     if event.unicode.lower() == "e":
                         player.update("K")
                     if event.unicode.lower() == "m":
@@ -949,6 +980,8 @@ if __name__ == '__main__':
                 CLICK.play()
                 if back_button.pressed(pygame.mouse.get_pos()):
                     menu = False
+                elif control_button.pressed(pygame.mouse.get_pos()):
+                    control_screen()
                 elif exit_button.pressed(pygame.mouse.get_pos()):
                     running = False
                     terminate()
@@ -958,14 +991,24 @@ if __name__ == '__main__':
                 current_station = pygame.mixer.Sound("sounds/" + STATIONS_SOUNDS[num_st])
                 current_station.play()
                 del STATIONS_SOUNDS[num_st]
+                if len(STATIONS) == 26:
+                    for i in range(7):
+                        zombies.append(Zombie(STATIONS[0][1][i], 498, len(zombies)))
+                    del STATIONS[0]
                 if num_st == -1:
                     num_st = -2
+                    for i in range(7):
+                        zombies.append(Zombie(STATIONS[0][1][i], 498, len(zombies)))
+                    directory = STATIONS[0][2]
+                    images = os.listdir(directory)
+                    left = -32784
+                    for i in range(len(images)):
+                        if images[i].startswith("image"):
+                            fon_wagon_list[i - 1] = FonWagon(directory + images[i], left)
+                            left += 3415
+                    del STATIONS[0]
                 elif num_st == -2:
                     num_st = -1
-                for i in range(7):
-                    zombies.append(Zombie(STATIONS[0][1][i], 468, len(zombies)))
-                del STATIONS[0]
-
         screen.fill(pygame.Color("black"))
         camera.update(player)
 
@@ -979,7 +1022,8 @@ if __name__ == '__main__':
         player_group.draw(screen)
         for num in range(len(zombies)):
             zombies[num].update()
-        if all(zombies[num].who == "D" for num in range(len(zombies))):
+        if all(zombies[num].who == "D" for num in range(len(zombies))) or any(
+                i.type.startswith("prohod") and pygame.sprite.collide_mask(player, i) for i in wagon_group):
             flags = [True, True, True, True, True, True]
         else:
             flags = [False, False, False, False, False, False]
@@ -998,7 +1042,7 @@ if __name__ == '__main__':
             dialog_group.draw(screen)
             dialog_main.print_text(name + ":", 418)
             dialog_main.print_text(cur_text, 481)
-            dialog_main.print_text(cur_text2, 581)
+            dialog_main.print_text(cur_text2, 531)
             if count_time()[1] >= 5:
                 dialog = False
         elif backpack.opened:
@@ -1011,7 +1055,7 @@ if __name__ == '__main__':
 
         if prozent == 0:
             end_screen("Вы проиграли", str(count_time()))
-            cur_mood.update(str(prozent))
+            cur_mood.update(moods_dict["0"])
         elif 5 <= prozent <= 100 and prozent % 5 == 0:
             cur_mood.update(moods_dict[str(prozent)])
 
