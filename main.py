@@ -3,45 +3,102 @@ import sys
 import time
 import pygame
 import sqlite3
+from random import randrange
 
 pygame.init()
-pygame.key.set_repeat(100, 70)
+pygame.key.set_repeat(100, 70)  # Задержка кнопок
 
-FPS = 50
-WIDTH = 1366
-HEIGHT = 768
-STEP = 50
-TIMEBETWEENSTATIONS = 150000
-TIME = 15000
-CURSOR = pygame.image.load("images/icons/cursor.png")
-CLICK = pygame.mixer.Sound("sounds/click.ogg")
-STATIONS_SOUNDS = []
-STATIONS = [("Коммунарка",),
-            ("Ольховая",),
-            ("Прокшино",),
-            ("Филатов Луг",),
-            ("Саларьево",),
-            ("Румянцево",),
-            ("Тропарёво",),
-            ("Юго-Западная",),
-            ("Проспект Вернадского",),
-            ("Университет",),
-            ("Воробьёвы горы",),
-            ("Спортивная",),
-            ("Фрунзенская",),
-            ("Парк культуры",),
-            ("Кропоткинская",),
-            ("Библиотека имени Ленина",),
-            ("Охотный Ряд",),
-            ("Лубянка",),
-            ("Чистые пруды",),
-            ("Красные Ворота",),
-            ("Комсомольская",),
-            ("Красносельская",),
-            ("Сокольники",),
-            ("Преображенская площадь",),
-            ("Черкизовская",),
-            ("Бульвар Рокоссовского",)]
+FPS = 50  # Кол-во кадров в секунду
+WIDTH = 1366  # Ширина приложения
+HEIGHT = 768  # Высота приложения
+STEP = 50  # Скорость главного героя
+level = "Лёгкий"  # Уровень (Лёгкий, Средний, Сложный)
+TIMEBETWEENSTATIONS = 150000  # Время между станцииями
+CURSOR = pygame.image.load("images/icons/cursor.png")  # Изображение курсора
+CLICK = pygame.mixer.Sound("sounds/click.ogg")  # Звук клика
+STATIONS_SOUNDS = []  # Массив из звуков станций
+# Заранее спамлю зомби
+STATIONS = [("Коммунарка", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                            randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                            randrange(-32208, -3713)]),
+            ("Ольховая", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                          randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                          randrange(-32208, -3713)]),
+            ("Прокшино", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                          randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                          randrange(-32208, -3713)]),
+            ("Филатов Луг", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                             randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                             randrange(-32208, -3713)]),
+            ("Саларьево", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                           randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                           randrange(-32208, -3713)]),
+            ("Румянцево", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                           randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                           randrange(-32208, -3713)]),
+            ("Тропарёво", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                           randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                           randrange(-32208, -3713)]),
+            ("Юго-Западная", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                              randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                              randrange(-32208, -3713)]),
+            ("Проспект Вернадского", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                                      randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                                      randrange(-32208, -3713)]),
+            ("Университет", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                             randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                             randrange(-32208, -3713)]),
+            ("Воробьёвы горы", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                                randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                                randrange(-32208, -3713)]),
+            ("Спортивная", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                            randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                            randrange(-32208, -3713)]),
+            ("Фрунзенская", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                             randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                             randrange(-32208, -3713)]),
+            ("Парк культуры", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                               randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                               randrange(-32208, -3713)]),
+            ("Кропоткинская", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                               randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                               randrange(-32208, -3713)]),
+            ("Библиотека имени Ленина",
+             [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+              randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+              randrange(-32208, -3713)]),
+            ("Охотный Ряд", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                             randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                             randrange(-32208, -3713)]),
+            ("Лубянка", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                         randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                         randrange(-32208, -3713)]),
+            ("Чистые пруды", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                              randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                              randrange(-32208, -3713)]),
+            ("Красные Ворота", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                                randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                                randrange(-32208, -3713)]),
+            ("Комсомольская", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                               randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                               randrange(-32208, -3713)]),
+            ("Красносельская", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                                randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                                randrange(-32208, -3713)]),
+            ("Сокольники", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                            randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                            randrange(-32208, -3713)]),
+            ("Преображенская площадь", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                                        randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                                        randrange(-32208, -3713)]),
+            ("Черкизовская", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                              randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                              randrange(-32208, -3713)]),
+            ("Бульвар Рокоссовского", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
+                                       randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+                                       randrange(-32208, -3713)])]
+name = None  # Переменная, где хранится имя
+# Кладу в массив пути к звукам станций
 directory = "sounds/"
 sounds = os.listdir(directory)
 for sound in range(len(sounds)):
@@ -49,13 +106,15 @@ for sound in range(len(sounds)):
         STATIONS_SOUNDS.append(sounds[sound])
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
-pygame.display.set_caption("Красная ветка")
-pygame.display.set_icon(pygame.image.load("images/icons/icon.png"))
-pygame.mouse.set_visible(0)
-pygame.time.set_timer(pygame.USEREVENT, TIMEBETWEENSTATIONS)
-clock = pygame.time.Clock()
+fullscreen = True  # Изначально с полноэкранным режимом
+pygame.display.set_caption("Красная ветка")  # Имя окна
+pygame.display.set_icon(pygame.image.load("images/icons/icon.png"))  # Иконка приложения
+pygame.mouse.set_visible(0)  # Отключаю видимость встроенного курсора
+clock = pygame.time.Clock()  # Счётчик для событий
 
-start_menu_sprites = pygame.sprite.Group()
+# Переменные, где хранятся группы спрайтов
+start_menu_group = pygame.sprite.Group()
+control_menu_group = pygame.sprite.Group()
 all_groups = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
 people_group = pygame.sprite.Group()
@@ -68,22 +127,26 @@ zombie_group = pygame.sprite.Group()
 
 
 def create_database(name):
+    """Статический метод, который добавляет игрока в базу данных"""
     con = sqlite3.connect("data/Players.db")
     cur = con.cursor()
-    cur.execute(f"""INSERT INTO Player(Name, Time) VALUES({name}, 0)""")
+    cur.execute("INSERT INTO Player VALUES(?, ?, ?)", [name, "0", "Не закончена"])
     con.commit()
 
 
-def update_database(name, time):
+def update_database(time, result=None):
+    """Обновляет базу данных"""
+    global name
     con = sqlite3.connect("data/Players.db")
     cur = con.cursor()
-    cur.execute(f"""UPDATE Player
-SET Time = {time}
-WHERE Name = {name}""")
+    cur.execute(f"UPDATE Player SET Time = '{str(time)}' WHERE Name='{str(name)}'")
+    if result is not None:
+        cur.execute(f"UPDATE Player SET Result = '{str(result)}' WHERE Name='{str(name)}'")
     con.commit()
 
 
 def load_image(name, color_key=None):
+    """Загружает изображение"""
     fullname = os.path.join('images', name)
     try:
         image = pygame.image.load(fullname)
@@ -100,28 +163,38 @@ def load_image(name, color_key=None):
 
 
 def terminate():
+    """Корректно завершает работу приложения"""
     pygame.quit()
     sys.exit()
 
 
 def count_time():
+    """Статический метод, который считает и возвращает время в формате (МИН, СЕК)"""
     finish = time.monotonic()
     result_sec = finish - start
-    result_min = result_sec / 60
-    result_sec = result_sec % 60 * 60
-    return int(result_min), int(result_sec) // 100
+    result_min = int(result_sec / 60)
+    result_sec = int(result_sec - result_min * 60)
+    update_database("Минут: " + str(result_min) + ", Секунд: " + str(result_sec))
+    return result_min, result_sec
 
 
 def draw_cursor(x, y):
+    """Рисует курсор"""
     screen.blit(CURSOR, (x, y))
 
 
 def draw_buttons(obj, c1, c2, c3, x, y, length, height, width, text, text_c1, text_c2, text_c3):
+    """Статический метод, который рисует кнопки"""
     obj.create_button(screen, (c1, c2, c3), x, y, length, height, width, text, (text_c1, text_c2, text_c3))
 
 
 def settings_screen():
+    """Окно настроек"""
+    global screen, fullscreen, level, TIMEBETWEENSTATIONS
+    # Создаю переменные с объектом Button
     exit_button = Button()
+    fullscreen_button = Button()
+    level_button = Button()
     running_settings_screen = True
 
     while running_settings_screen:
@@ -132,12 +205,32 @@ def settings_screen():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 CLICK.play()
                 if event.button == 1:
-                    if exit_button.pressed(pygame.mouse.get_pos()):
+                    if exit_button.pressed(pygame.mouse.get_pos()):  # Если нажал на выход, то выходям из функции
                         return
+                    if fullscreen_button.pressed(pygame.mouse.get_pos()):  # Меняем тип окна
+                        if fullscreen:
+                            screen = pygame.display.set_mode((WIDTH, HEIGHT))
+                            fullscreen = False
+                        else:
+                            screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
+                            fullscreen = True
+                    if level_button.pressed(pygame.mouse.get_pos()):  # Меняем уровень сложности
+                        if level == "Лёгкий":
+                            TIMEBETWEENSTATIONS = 100000
+                            level = "Средний"
+                        elif level == "Средний":
+                            TIMEBETWEENSTATIONS = 50000
+                            level = "Сложный"
+                        elif level == 'Сложный':
+                            TIMEBETWEENSTATIONS = 150000
+                            level = "Лёгкий"
+
         screen.fill(pygame.Color("black"))
-        start_menu_sprites.draw(screen)
-        start_menu_sprites.update()
+        start_menu_group.draw(screen)
+        start_menu_group.update()
         draw_buttons(exit_button, 255, 1, 0, 81, 44, 300, 70, 0, "Назад", 0, 0, 0)
+        draw_buttons(fullscreen_button, 255, 1, 0, 296, 224, 774, 70, 0, "Вкл/Выкл полноэкранный режим", 0, 0, 0)
+        draw_buttons(level_button, 255, 1, 0, 296, 404, 774, 70, 0, "Уровень: " + level, 0, 0, 0)
         if pygame.mouse.get_focused():
             draw_cursor(*pygame.mouse.get_pos())
         pygame.display.flip()
@@ -145,14 +238,16 @@ def settings_screen():
 
 
 def start_screen():
+    """Главное меню"""
     intro_text = ["Красная ветка",
                   "Старт",
                   "Настройки",
                   "Выход"]
 
-    pygame.mixer_music.load("sounds/fon.wav")
+    pygame.mixer_music.load("sounds/fon.wav")  # Загрузка фонового звука
     pygame.mixer_music.play(-1)
     Fon()
+    # Инициализирую переменные с объектом Button
     red_line_button = Button()
     start_button = Button()
     settings_button = Button()
@@ -168,17 +263,15 @@ def start_screen():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 CLICK.play()
                 if event.button == 1:
-                    if red_line_button.pressed(pygame.mouse.get_pos()):
-                        pass
-                    elif start_button.pressed(pygame.mouse.get_pos()):
+                    if start_button.pressed(pygame.mouse.get_pos()):  # При нажатии, активируется игра
                         return
-                    elif settings_button.pressed(pygame.mouse.get_pos()):
+                    elif settings_button.pressed(pygame.mouse.get_pos()):  # При нажатии запускаем настройки
                         settings_screen()
-                    elif exit_button.pressed(pygame.mouse.get_pos()):
+                    elif exit_button.pressed(pygame.mouse.get_pos()):  # При нажатии выходим из приложения
                         terminate()
         screen.fill(pygame.Color("black"))
-        start_menu_sprites.draw(screen)
-        start_menu_sprites.update()
+        start_menu_group.draw(screen)
+        start_menu_group.update()
         draw_buttons(red_line_button, 255, 1, 0, 326, 77, 715, 117, 0, intro_text[0], 255, 204, 0)
         draw_buttons(start_button, 255, 1, 0, 533, 345, 300, 70, 0, intro_text[1], 0, 0, 0)
         draw_buttons(settings_button, 255, 1, 0, 533, 468, 300, 70, 0, intro_text[2], 0, 0, 0)
@@ -189,13 +282,85 @@ def start_screen():
         clock.tick(FPS)
 
 
+def control_screen():
+    """Окно управления"""
+    # Создаю переменные с объектом Button
+    exit_button = Button()
+    running_control_screen = True
+
+    while running_control_screen:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running_control_screen = False
+                terminate()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                CLICK.play()
+                if event.button == 1:
+                    if exit_button.pressed(pygame.mouse.get_pos()):  # Если нажал на выход, то выходям из функции
+                        return
+        screen.fill(pygame.Color("black"))
+        control_menu_group.draw(screen)
+        draw_buttons(exit_button, 255, 1, 0, 81, 44, 300, 70, 0, "Назад", 0, 0, 0)
+        if pygame.mouse.get_focused():
+            draw_cursor(*pygame.mouse.get_pos())
+        pygame.display.flip()
+        clock.tick(FPS)
+
+
+def end_screen(text, count):
+    """Окно завершения, здесь выводится итог игры, а также время потраченное"""
+    intro_text = [text,
+                  "Счёт: " + str(count),
+                  "Выход"]
+    if text == "Вы проиграли":  # Обновляем базу данных
+        update_database(count, "Поражение")
+    else:
+        update_database(count, "Победа")
+
+    pygame.mixer_music.load("sounds/credits.ogg")  # Запускаем музыку концовки
+    pygame.mixer_music.play(-1)
+    Fon()  # Загружаем фон
+    # Инициализирую переменные объектами Button
+    result_button = Button()
+    count_button = Button()
+    exit_button = Button()
+
+    running_end_screen = True
+
+    while running_end_screen:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running_end_screen = False
+                terminate()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                CLICK.play()
+                if event.button == 1:
+                    if exit_button.pressed(pygame.mouse.get_pos()):  # При нажатии, выходим из приложения
+                        terminate()
+        screen.fill(pygame.Color("black"))
+        start_menu_group.draw(screen)
+        start_menu_group.update()
+        # Рисуем кнопки
+        draw_buttons(result_button, 255, 1, 0, 326, 77, 715, 117, 0, intro_text[0], 255, 204, 0)
+        draw_buttons(count_button, 255, 1, 0, 533, 345, 300, 70, 0, intro_text[1], 0, 0, 0)
+        draw_buttons(exit_button, 255, 1, 0, 533, 605, 300, 70, 0, intro_text[2], 0, 0, 0)
+        icon_group.draw(screen)  # Рисуем настроение( Минус: рисуется рюкзак)
+        if pygame.mouse.get_focused():
+            draw_cursor(*pygame.mouse.get_pos())
+        pygame.display.flip()
+        clock.tick(FPS)
+
+
 def choice_screen_name():
+    """Экран набора имени"""
+    global name
     text = ["Введите имя",
             "СТАРТ",
             " "]
 
-    pygame.mixer_music.load("sounds/fon.wav")
+    pygame.mixer_music.load("sounds/fon.wav")  # Загружаем фоновую музыку
     pygame.mixer_music.play(-1)
+    # Создаём кнопки
     start_button = Button()
     text_button = Button()
     name_button = Button()
@@ -209,18 +374,18 @@ def choice_screen_name():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 CLICK.play()
                 if event.button == 1:
-                    if start_button.pressed(pygame.mouse.get_pos()):
-                        # Добавить в БД
+                    if start_button.pressed(pygame.mouse.get_pos()):  # При нажатии, данные заносятся в БД
+                        create_database(text[2])
+                        name = text[2]
                         return
             elif event.type == pygame.KEYDOWN:
-                if event.unicode == "":
-                    text[2] = " "
-                elif event.unicode == "\x08":
+                # Вводим имя
+                if event.unicode == "\x08":
                     text[2] = text[2][0:-1]
                 else:
                     text[2] += event.unicode
         screen.fill(pygame.Color("black"))
-        try:
+        try:  # Рисуем кнопки, но если пользователь нажал лишний раз <backspace> то не обращаем внимание на ошибку
             draw_buttons(name_button, 255, 1, 0, 418, 36, 529, 75, 0, text[0], 255, 204, 0)
             draw_buttons(text_button, 255, 255, 255, 433, 334, 500, 100, 0, text[2], 0, 0, 0)
             draw_buttons(start_button, 255, 1, 0, 418, 656, 529, 75, 0, text[1], 0, 0, 0)
@@ -233,18 +398,21 @@ def choice_screen_name():
 
 
 class Mood(pygame.sprite.Sprite):
+    """Класс иконки настроения"""
+
     def __init__(self, image):
         super().__init__(icon_group)
-        self.image = pygame.image.load(image)
+        self.image = pygame.image.load("images/mood/" + image)
         self.rect = self.image.get_rect()
         self.rect.left = 910
         self.rect.top = 680
 
     def update(self, image):
-        self.image = pygame.image.load(image)
+        self.image = pygame.image.load("images/mood/" + image)
 
 
 class Wagon(pygame.sprite.Sprite):
+    """Класс изображения поезда по частям"""
     image_wagon = pygame.image.load("images/Вагон.png")
     image_cabin = pygame.image.load("images/Кабинка машиниста.png")
     image_cabin_rot = pygame.transform.flip(pygame.image.load("images/Кабинка машиниста.png"), 1, 0)
@@ -269,6 +437,7 @@ class Wagon(pygame.sprite.Sprite):
 
 
 class FonWagon(pygame.sprite.Sprite):
+    """Фоновое изображение игры"""
 
     def __init__(self, image, left):
         super().__init__(fon_group, all_groups)
@@ -277,8 +446,12 @@ class FonWagon(pygame.sprite.Sprite):
         self.rect.left = left
         self.rect.top = 0
 
+    def update(self, image):
+        self.image = pygame.image.load(image)
+
 
 class Map(pygame.sprite.Sprite):
+    """Класс карты, открывается если нажата кнопка <m>"""
     image = pygame.transform.scale(pygame.image.load("images/icons/map_icon.png"), (128, 128))
     image2 = pygame.image.load("images/map_metro.png")
 
@@ -290,17 +463,11 @@ class Map(pygame.sprite.Sprite):
         self.rect.top = 0
         self.opened = False
 
-    def update(self):
-        if self.opened:
-            self.image = Map.image2
-            self.rect = self.image.get_rect()
-            self.rect.left = 163
-            self.rect.top = -18
-        else:
-            self.image = Map.image
-            self.rect = self.image.get_rect()
-            self.rect.left = 1238
-            self.rect.top = 0
+    def update(self, image, left, top):
+        self.image = pygame.image.load(image)
+        self.rect = self.image.get_rect()
+        self.rect.left = left
+        self.rect.top = top
 
 
 class Board:
@@ -348,7 +515,9 @@ class Board:
 
 
 class Backpack(pygame.sprite.Sprite, Board):
+    """Класс изображения рюкзака, и его внутренности"""
     image = pygame.transform.scale(pygame.image.load("images/icons/backpack.png"), (100, 142))
+    key = pygame.transform.scale(pygame.image.load("images/icons/key.png"), (64, 64))
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self, icon_group)
@@ -358,9 +527,24 @@ class Backpack(pygame.sprite.Sprite, Board):
         self.rect.left = 0
         self.rect.top = 0
         self.opened = False
+        self.data = [None for i in range(7) for j in range(7)]
+        self.data[0] = Backpack.key
 
     def open(self):
-        Board.render(self)
+        self.render()
+
+    def render(self):
+        # Рисую рюкзак
+        pygame.draw.rect(screen, pygame.Color("white"),
+                         (self.left, self.top,
+                          self.width * self.cell_size, self.height * self.cell_size))
+        for y in range(self.height):
+            for x in range(self.width):
+                pygame.draw.rect(screen, pygame.Color("black"),
+                                 (x * self.cell_size + self.left, y * self.cell_size + self.top,
+                                  self.cell_size, self.cell_size), 1)
+                if self.data[x][y] is not None:
+                    py
 
 
 class People(pygame.sprite.Sprite):
@@ -479,6 +663,9 @@ class Player(pygame.sprite.Sprite):
             self.image = self.frames_left[self.cur_frame]
             player.rect.x -= STEP
             for i in wagon_group:
+                if i.type == "cabin" and all(
+                        zombies[num].who == "D" for num in range(len(zombies))) and pygame.sprite.collide_mask(self, i):
+                    end_screen("Вы победили", count_time())
                 if i.type == 'cabin' or i.type == "cabin_rot" or (i.type.startswith("prohod") and
                                                                   not flags[int(i.type[-1]) - 1]):
                     if pygame.sprite.collide_mask(self, i):
@@ -658,7 +845,7 @@ class Fon(pygame.sprite.Sprite):
     image = pygame.transform.scale(pygame.image.load("images/fons/fon.jpg"), (2000, 2000))
 
     def __init__(self):
-        super().__init__(start_menu_sprites)
+        super().__init__(start_menu_group)
         self.image = Fon.image
         self.rect = Fon.image.get_rect()
         self.rect.left = -634
@@ -670,9 +857,18 @@ class Fon(pygame.sprite.Sprite):
             self.rect.left -= 520
 
 
+"""class Image(pygame.sprite.Sprite):
+    image = pygame.image.load("images/control_image.jpg"))
+
+    def __init__(self):
+        super().__init__(control_menu_group)
+        self.image =Image.image
+        self.rect = self.image.get_rect()
+        self.rect.left = -634"""
+
 if __name__ == '__main__':
     start_screen()
-    # choice_screen_name() Не до конца
+    choice_screen_name()
     pygame.mixer_music.load("sounds/Cyberpunk Moonlight Sonata v2.mp3")
     flags = [False, False, False, False, False, False]
     menu = False
@@ -689,10 +885,10 @@ if __name__ == '__main__':
     dialog_main = Dialog()
     camera = Camera()
     player = Player()
-    cur_text = "Мне нужно дойти до последнего вагона любой ценой!"
+    cur_text = "Мне нужно дойти до кабинки машиниста любой ценой!"
     cur_text2 = "(До того, как поезд доедет до последней станции)"
     people = [People("young1", -333, 306)]
-    zombies = [Zombie(0, -3773, 0), Zombie(-8656, 498, 1)]
+    zombies = [Zombie(-3773, 498, 0), Zombie(-8513, 498, 1), Zombie(-13252, 498, 2), Zombie(-17991, 498, 3)]
     wagons = [Wagon("cabin", -32749, 68), Wagon("wagon1", -32208, 68), Wagon("prohod1", -27612, 68),
               Wagon("wagon2", -27469, 68), Wagon("prohod2", -22873, 68), Wagon("wagon3", -22730, 68),
               Wagon("prohod3", -18134, 68), Wagon("wagon4", -17991, 68), Wagon("prohod4", -13395, 68),
@@ -706,7 +902,7 @@ if __name__ == '__main__':
     for i in range(len(moods)):
         moods_dict[moods[i][4:-4]] = moods[i]
     prozent = 60
-    cur_mood = Mood("images/mood/" + moods_dict[str(prozent)])
+    cur_mood = Mood(moods_dict[str(prozent)])
 
     directory = "images/fons/Fon_Kommunarka/"
     images = os.listdir(directory)
@@ -715,10 +911,11 @@ if __name__ == '__main__':
         if images[i].startswith("image"):
             FonWagon(directory + images[i], left)
             left += 3415
-    num = -2
+    num_st = -2
     # pygame.mixer_music.play(-1)
     running = True
     start = time.monotonic()
+    pygame.time.set_timer(pygame.USEREVENT, TIMEBETWEENSTATIONS)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -756,15 +953,18 @@ if __name__ == '__main__':
                     running = False
                     terminate()
             elif event.type == pygame.USEREVENT:
-                current_station = pygame.mixer.Sound("sounds/" + STATIONS_SOUNDS[num])
-                current_station.play()
-                del STATIONS_SOUNDS[num]
-                if num == -1:
-                    num = -2
-                elif num == -2:
-                    num = -1
                 if not len(STATIONS):
-                    pass  # Проиграл
+                    end_screen("Вы проиграли", str(count_time()))
+                current_station = pygame.mixer.Sound("sounds/" + STATIONS_SOUNDS[num_st])
+                current_station.play()
+                del STATIONS_SOUNDS[num_st]
+                if num_st == -1:
+                    num_st = -2
+                elif num_st == -2:
+                    num_st = -1
+                for i in range(7):
+                    zombies.append(Zombie(STATIONS[0][1][i], 468, len(zombies)))
+                del STATIONS[0]
 
         screen.fill(pygame.Color("black"))
         camera.update(player)
@@ -776,10 +976,14 @@ if __name__ == '__main__':
         people_group.draw(screen)
         if emote:
             emotes_group.draw(screen)
+        player_group.draw(screen)
         for num in range(len(zombies)):
             zombies[num].update()
+        if all(zombies[num].who == "D" for num in range(len(zombies))):
+            flags = [True, True, True, True, True, True]
+        else:
+            flags = [False, False, False, False, False, False]
         zombie_group.draw(screen)
-        player_group.draw(screen)
         icon_group.draw(screen)
 
         if menu:
@@ -792,6 +996,7 @@ if __name__ == '__main__':
             draw_cursor(*pygame.mouse.get_pos())
         elif dialog:
             dialog_group.draw(screen)
+            dialog_main.print_text(name + ":", 418)
             dialog_main.print_text(cur_text, 481)
             dialog_main.print_text(cur_text2, 581)
             if count_time()[1] >= 5:
@@ -800,15 +1005,16 @@ if __name__ == '__main__':
             backpack.render()
             draw_cursor(*pygame.mouse.get_pos())
         elif map.opened:
-            map.update()
+            map.update("images/map_metro.png", 163, -18)
+        elif not map.opened:
+            map.update("images/icons/map_icon.png", 1238, 0)
 
         if prozent == 0:
-            pass  # Проигрыш
-        elif 5 <= prozent <= 100:
-            try:
-                cur_mood.update("images/mood/" + moods_dict[str(prozent)])
-            except KeyError:
-                pass
+            end_screen("Вы проиграли", str(count_time()))
+            cur_mood.update(str(prozent))
+        elif 5 <= prozent <= 100 and prozent % 5 == 0:
+            cur_mood.update(moods_dict[str(prozent)])
+
         pygame.display.flip()
         clock.tick(FPS)
 
