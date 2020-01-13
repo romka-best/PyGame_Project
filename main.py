@@ -331,7 +331,7 @@ def control_screen():
                     # Если нажал на выход, то выходим из функции
                     if exit_button.pressed(pygame.mouse.get_pos()):
                         return
-        screen.fill(pygame.Color("black"))
+        screen.fill(pygame.Color("white"))
         control_menu_group.draw(screen)
         draw_buttons(exit_button, 255, 1, 0, 81, 44, 300, 70, 0, "Назад", 0, 0, 0)
         screen.blit(Fon.image_control, (232, 164))
@@ -379,9 +379,10 @@ def end_screen(text, count):
         draw_buttons(result_button, 255, 1, 0, 326, 77, 715, 117, 0, intro_text[0], 255, 204, 0)
         draw_buttons(count_button, 255, 1, 0, 533, 345, 300, 70, 0, intro_text[1], 0, 0, 0)
         draw_buttons(exit_button, 255, 1, 0, 533, 605, 300, 70, 0, intro_text[2], 0, 0, 0)
-        icon_group.draw(screen)  # Рисуем настроение( Минус: рисуется рюкзак)
+        icon_group.draw(screen)  # Рисуем настроение( Минус: рисуется рюкзак и карта)
         if pygame.mouse.get_focused():
             draw_cursor(*pygame.mouse.get_pos())
+
         pygame.display.flip()
         clock.tick(FPS)
 
@@ -410,7 +411,7 @@ def choice_screen_name():
                 CLICK.play()
                 if event.button == 1:
                     # При нажатии, данные заносятся в БД
-                    if start_button.pressed(pygame.mouse.get_pos()):
+                    if start_button.pressed(pygame.mouse.get_pos()) and text[2].strip() != "":
                         create_database(text[2])
                         name = text[2]
                         return
@@ -482,10 +483,10 @@ class FonWagon(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.left = left
         self.rect.top = 0
+        self.dx = 0
 
-    def update(self, image, left):
+    def update(self, image):
         self.image = pygame.image.load(image)
-        self.rect = self.image.get_rect()
 
 
 class Map(pygame.sprite.Sprite):
@@ -503,7 +504,6 @@ class Map(pygame.sprite.Sprite):
 
     def update(self, image, left, top):
         self.image = pygame.image.load(image)
-        self.rect = self.image.get_rect()
         self.rect.left = left
         self.rect.top = top
 
@@ -724,6 +724,7 @@ class Player(pygame.sprite.Sprite):
         self.cur_frame = 0
         self.mask = pygame.mask.from_surface(self.image)
         self.last = None
+        self.x = 0
 
     def update(self, *args):  # В зависимости от нажатой кнопки, меняются спрайты
         global prozent
@@ -732,6 +733,7 @@ class Player(pygame.sprite.Sprite):
             self.cur_frame = (self.cur_frame + 1) % len(self.frames_left)
             self.image = self.frames_left[self.cur_frame]
             player.rect.x -= STEP
+            self.x -= STEP
             for i in wagon_group:
                 if i.type == "cabin" and all(
                         zombies[num].who == "D" for num in range(len(zombies))) and \
@@ -742,6 +744,7 @@ class Player(pygame.sprite.Sprite):
                     if pygame.sprite.collide_mask(self, i):
                         self.image = self.frames[1]
                         player.rect.x += STEP
+                        self.x += STEP
                         break
             for j in people_group:
                 if pygame.sprite.collide_mask(self, j) and j.talk:
@@ -753,12 +756,14 @@ class Player(pygame.sprite.Sprite):
             self.cur_frame = (self.cur_frame + 1) % len(self.frames_right)
             self.image = self.frames_right[self.cur_frame]
             player.rect.x += STEP
+            self.x += STEP
             for i in wagon_group:
                 if i.type == 'cabin' or i.type == "cabin_rot" or (i.type.startswith("prohod") and
                                                                   not flags[int(i.type[-1]) - 1]):
                     if pygame.sprite.collide_mask(self, i):
                         self.image = self.frames[1]
                         player.rect.x -= STEP
+                        self.x -= STEP
                         break
             for j in people_group:
                 if pygame.sprite.collide_mask(self, j) and j.talk:
@@ -828,13 +833,14 @@ class Zombie(pygame.sprite.Sprite):
             self.frames_kick.append(pygame.image.load(f"images/zombie/"
                                                       f"character_zombie_attack{i}.png"))
         self.rect = self.image.get_rect()
-        self.rect.left = left
+
+        self.rect.left = left + abs(player.x)
         self.rect.top = top
         self.cur_frame = 0
         self.cur_frame_kick = 0
         self.mask = pygame.mask.from_surface(self.image)
         self.who = "R"
-        self.step = 10
+        self.step = 8
         self.num = num
         self.dead = False
 
@@ -967,14 +973,19 @@ if __name__ == '__main__':
     player = Player()
     cur_text = "Мне нужно дойти до кабинки машиниста любой ценой!"
     cur_text2 = "(До того, как поезд доедет до последней станции)"
+    cur_text3 = "При этом, в поезде не должно остаться Зомби..."
     people = [People("young1", -333, 306), People("young2", -4192, 306),
               People("oldman1", -6865, 340), People("teenagerM1", -27469, 340),
               People("teenagerW1", -23189, 340), People("minibosspair", -15821, 340)]
     if level == "Лёгкий":
         zombies = [Zombie(-3773, 498, 0), Zombie(-8513, 498, 1), Zombie(-13252, 498, 2),
+                   Zombie(-17991, 498, 3), Zombie(-22730, 498, 4), Zombie(-27469, 498, 5)]
+    elif level == "Средний":
+        zombies = [Zombie(-3773, 498, 0), Zombie(-8513, 498, 1), Zombie(-13252, 498, 2),
                    Zombie(-17991, 498, 3), Zombie(-22730, 498, 4)]
     else:
-        zombies = [Zombie(-3773, 498, 0), Zombie(-8513, 498, 1), Zombie(-13252, 498, 2)]
+        zombies = [Zombie(-3773, 498, 0), Zombie(-8513, 498, 1), Zombie(-13252, 498, 2),
+                   Zombie(-17991, 498, 3)]
     wagons = [Wagon("cabin", -32749, 68), Wagon("wagon1", -32208, 68), Wagon("prohod1", -27612, 68),
               Wagon("wagon2", -27469, 68), Wagon("prohod2", -22873, 68), Wagon("wagon3", -22730, 68),
               Wagon("prohod3", -18134, 68), Wagon("wagon4", -17991, 68),
@@ -1014,19 +1025,19 @@ if __name__ == '__main__':
                     menu = not menu
                     continue
                 if not menu:
-                    if event.key == pygame.K_LEFT or event.unicode.lower() == "a":
+                    if event.key == pygame.K_LEFT or event.key == 97:
                         player.update("L")
-                    if event.key == pygame.K_RIGHT or event.unicode.lower() == "d":
+                    if event.key == pygame.K_RIGHT or event.key == 100:
                         player.update("R")
-                    if event.key == pygame.K_UP or event.unicode.lower() == "w":
+                    if event.key == pygame.K_UP or event.key == 119:
                         player.update("U")
-                    if event.key == pygame.K_DOWN or event.unicode.lower() == "s":
+                    if event.key == pygame.K_DOWN or event.key == 115:
                         player.update("D")
-                    if event.unicode.lower() == "f" and emote:
+                    if event.key == 102 and emote:
                         player.update("F")
-                    if event.unicode.lower() == "e":
+                    if event.key == 101:
                         player.update("K")
-                    if event.unicode.lower() == "m":
+                    if event.key == 109:
                         map.opened = not map.opened
                     if event.unicode.lower() == "\t":
                         backpack.opened = not backpack.opened
@@ -1056,15 +1067,18 @@ if __name__ == '__main__':
                     for i in range(7):
                         zombies.append(Zombie(STATIONS[0][1][i], 498, len(zombies)))
                     directory = STATIONS[0][2]
-                    images = os.listdir(directory)
-                    left = -32784
+                    images_not_main = os.listdir(directory)
                     for i in range(len(images)):
-                        if images[i].startswith("image"):
-                            fon_wagon_list[i - 1] = FonWagon(directory + images[i], left)
-                            left += 3415
+                        if images_not_main[i].startswith("image"):
+                            fon_wagon_list[i - 1].update(directory + images_not_main[i])
                     del STATIONS[0]
                 elif num_st == -2:
                     num_st = -1
+                    directory = "images/fons/Fon_Main/"
+                    images_main = os.listdir(directory)
+                    for i in range(len(images_main)):
+                        if images[i].startswith("image"):
+                            fon_wagon_list[i - 1].update(directory + images_main[i])
         screen.fill(pygame.Color("black"))
         camera.update(player)
 
@@ -1101,6 +1115,7 @@ if __name__ == '__main__':
             dialog_main.print_text(name + ":", 418)
             dialog_main.print_text(cur_text, 481)
             dialog_main.print_text(cur_text2, 531)
+            dialog_main.print_text(cur_text3, 581)
             if count_time()[1] >= 5:
                 dialog = False
         elif backpack.opened:
@@ -1112,8 +1127,8 @@ if __name__ == '__main__':
             map.update("images/icons/map_icon.png", 1238, 0)
 
         if prozent == 0:
-            end_screen("Вы проиграли", str(count_time()))
             cur_mood.update(moods_dict["0"])
+            end_screen("Вы проиграли", str(count_time()))
         elif 5 <= prozent <= 100 and prozent % 5 == 0:
             cur_mood.update(moods_dict[str(prozent)])
 
