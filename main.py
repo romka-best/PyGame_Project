@@ -18,84 +18,110 @@ CURSOR = pygame.image.load("images/icons/cursor.png")  # Изображение 
 CLICK = pygame.mixer.Sound("sounds/click.ogg")  # Звук клика
 STATIONS_SOUNDS = []  # Массив из звуков станций
 # Заранее спамлю зомби
-STATIONS = [("Коммунарка", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                            randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+STATIONS = [("Коммунарка", [randrange(-32208, -27612), randrange(-27469, -22873),
+                            randrange(-22730, -18134), randrange(-17991, -13395),
+                            randrange(-13252, -8656), randrange(-8513, -3917),
                             randrange(-32208, -3713)], "images/fons/Fon_Kommunarka/"),
-            ("Ольховая", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                          randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Ольховая", [randrange(-32208, -27612), randrange(-27469, -22873),
+                          randrange(-22730, -18134), randrange(-17991, -13395),
+                          randrange(-13252, -8656), randrange(-8513, -3917),
                           randrange(-32208, -3713)], "images/fons/Fon_Olhovaya/"),
-            ("Прокшино", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                          randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Прокшино", [randrange(-32208, -27612), randrange(-27469, -22873),
+                          randrange(-22730, -18134), randrange(-17991, -13395),
+                          randrange(-13252, -8656), randrange(-8513, -3917),
                           randrange(-32208, -3713)], "images/fons/Fon_Prokshino/"),
-            ("Филатов Луг", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                             randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Филатов Луг", [randrange(-32208, -27612), randrange(-27469, -22873),
+                             randrange(-22730, -18134), randrange(-17991, -13395),
+                             randrange(-13252, -8656), randrange(-8513, -3917),
                              randrange(-32208, -3713)], "images/fons/Fon_Filatov/"),
-            ("Саларьево", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                           randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Саларьево", [randrange(-32208, -27612), randrange(-27469, -22873),
+                           randrange(-22730, -18134), randrange(-17991, -13395),
+                           randrange(-13252, -8656), randrange(-8513, -3917),
                            randrange(-32208, -3713)], "images/fons/Fon_Salaryevo/"),
-            ("Румянцево", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                           randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Румянцево", [randrange(-32208, -27612), randrange(-27469, -22873),
+                           randrange(-22730, -18134), randrange(-17991, -13395),
+                           randrange(-13252, -8656), randrange(-8513, -3917),
                            randrange(-32208, -3713)], "images/fons/Fon_Rumyanzevo/"),
-            ("Тропарёво", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                           randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Тропарёво", [randrange(-32208, -27612), randrange(-27469, -22873),
+                           randrange(-22730, -18134), randrange(-17991, -13395),
+                           randrange(-13252, -8656), randrange(-8513, -3917),
                            randrange(-32208, -3713)], "images/fons/Troparevo/"),
-            ("Юго-Западная", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                              randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Юго-Западная", [randrange(-32208, -27612), randrange(-27469, -22873),
+                              randrange(-22730, -18134), randrange(-17991, -13395),
+                              randrange(-13252, -8656), randrange(-8513, -3917),
                               randrange(-32208, -3713)], "images/fons/Fon_Ugo-Zapadnaya/"),
-            ("Проспект Вернадского", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                                      randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Проспект Вернадского", [randrange(-32208, -27612), randrange(-27469, -22873),
+                                      randrange(-22730, -18134), randrange(-17991, -13395),
+                                      randrange(-13252, -8656), randrange(-8513, -3917),
                                       randrange(-32208, -3713)], "images/fons/Fon_Prospekt/"),
-            ("Университет", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                             randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Университет", [randrange(-32208, -27612), randrange(-27469, -22873),
+                             randrange(-22730, -18134), randrange(-17991, -13395),
+                             randrange(-13252, -8656), randrange(-8513, -3917),
                              randrange(-32208, -3713)], "images/fons/Fon_Universitet/"),
-            ("Воробьёвы горы", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                                randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Воробьёвы горы", [randrange(-32208, -27612), randrange(-27469, -22873),
+                                randrange(-22730, -18134), randrange(-17991, -13395),
+                                randrange(-13252, -8656), randrange(-8513, -3917),
                                 randrange(-32208, -3713)], "images/fons/Fon_Vorobevy/"),
-            ("Спортивная", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                            randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Спортивная", [randrange(-32208, -27612), randrange(-27469, -22873),
+                            randrange(-22730, -18134), randrange(-17991, -13395),
+                            randrange(-13252, -8656), randrange(-8513, -3917),
                             randrange(-32208, -3713)], "images/fons/Fon_Sportivnaya/"),
-            ("Фрунзенская", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                             randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Фрунзенская", [randrange(-32208, -27612), randrange(-27469, -22873),
+                             randrange(-22730, -18134), randrange(-17991, -13395),
+                             randrange(-13252, -8656), randrange(-8513, -3917),
                              randrange(-32208, -3713)], "images/fons/Fon_Frunzenskaya/"),
-            ("Парк культуры", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                               randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Парк культуры", [randrange(-32208, -27612), randrange(-27469, -22873),
+                               randrange(-22730, -18134), randrange(-17991, -13395),
+                               randrange(-13252, -8656), randrange(-8513, -3917),
                                randrange(-32208, -3713)], "images/fons/Fon_Park/"),
-            ("Кропоткинская", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                               randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Кропоткинская", [randrange(-32208, -27612), randrange(-27469, -22873),
+                               randrange(-22730, -18134), randrange(-17991, -13395),
+                               randrange(-13252, -8656), randrange(-8513, -3917),
                                randrange(-32208, -3713)], "images/fons/Fon_Kropotkinskaya/"),
             ("Библиотека имени Ленина",
              [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
               randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
               randrange(-32208, -3713)], "images/fons/Fon_Biblioteka/"),
-            ("Охотный Ряд", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                             randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Охотный Ряд", [randrange(-32208, -27612), randrange(-27469, -22873),
+                             randrange(-22730, -18134), randrange(-17991, -13395),
+                             randrange(-13252, -8656), randrange(-8513, -3917),
                              randrange(-32208, -3713)], "images/fons/Fon_Ohotnyi/"),
-            ("Лубянка", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                         randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Лубянка", [randrange(-32208, -27612), randrange(-27469, -22873),
+                         randrange(-22730, -18134), randrange(-17991, -13395),
+                         randrange(-13252, -8656), randrange(-8513, -3917),
                          randrange(-32208, -3713)], "images/fons/Fon_Lubyanka/"),
-            ("Чистые пруды", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                              randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Чистые пруды", [randrange(-32208, -27612), randrange(-27469, -22873),
+                              randrange(-22730, -18134), randrange(-17991, -13395),
+                              randrange(-13252, -8656), randrange(-8513, -3917),
                               randrange(-32208, -3713)], "images/fons/Fon_Chistye/"),
-            ("Красные Ворота", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                                randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Красные Ворота", [randrange(-32208, -27612), randrange(-27469, -22873),
+                                randrange(-22730, -18134), randrange(-17991, -13395),
+                                randrange(-13252, -8656), randrange(-8513, -3917),
                                 randrange(-32208, -3713)], "images/fons/Fon_Krasnye/"),
-            ("Комсомольская", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                               randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Комсомольская", [randrange(-32208, -27612), randrange(-27469, -22873),
+                               randrange(-22730, -18134), randrange(-17991, -13395),
+                               randrange(-13252, -8656), randrange(-8513, -3917),
                                randrange(-32208, -3713)], "images/fons/Fon_Komsomolskaya/"),
-            ("Красносельская", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                                randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                                randrange(-32208, -3713)]),
-            ("Сокольники", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                            randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Красносельская", [randrange(-32208, -27612), randrange(-27469, -22873),
+                                randrange(-22730, -18134), randrange(-17991, -13395),
+                                randrange(-13252, -8656), randrange(-8513, -3917),
+                                randrange(-32208, -3713)], "images/fons/Fon_Krasnoselskaya"),
+            ("Сокольники", [randrange(-32208, -27612), randrange(-27469, -22873),
+                            randrange(-22730, -18134), randrange(-17991, -13395),
+                            randrange(-13252, -8656), randrange(-8513, -3917),
                             randrange(-32208, -3713)], "images/fons/Fon_Sokolniki/"),
-            ("Преображенская площадь", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                                        randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
-                                        randrange(-32208, -3713)], "images/fons/Fon_Preobrazhenskaya/"),
-            ("Черкизовская", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                              randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Преображенская площадь", [randrange(-32208, -27612), randrange(-27469, -22873),
+                                        randrange(-22730, -18134), randrange(-17991, -13395),
+                                        randrange(-13252, -8656), randrange(-8513, -3917),
+                                        randrange(-32208, -3713)], "images/fons/Fon_"
+                                                                   "Preobrazhenskaya/"),
+            ("Черкизовская", [randrange(-32208, -27612), randrange(-27469, -22873),
+                              randrange(-22730, -18134), randrange(-17991, -13395),
+                              randrange(-13252, -8656), randrange(-8513, -3917),
                               randrange(-32208, -3713)], "images/fons/Fon_Cherkizovskaya/"),
-            ("Бульвар Рокоссовского", [randrange(-32208, -27612), randrange(-27469, -22873), randrange(-22730, -18134),
-                                       randrange(-17991, -13395), randrange(-13252, -8656), randrange(-8513, -3917),
+            ("Бульвар Рокоссовского", [randrange(-32208, -27612), randrange(-27469, -22873),
+                                       randrange(-22730, -18134), randrange(-17991, -13395),
+                                       randrange(-13252, -8656), randrange(-8513, -3917),
                                        randrange(-32208, -3713)], "images/fons/Fon_Bulvar/")]
 name = None  # Переменная, где хранится имя
 # Кладу в массив пути к звукам станций
@@ -185,7 +211,8 @@ def draw_cursor(x, y):
 
 def draw_buttons(obj, c1, c2, c3, x, y, length, height, width, text, text_c1, text_c2, text_c3):
     """Статический метод, который рисует кнопки"""
-    obj.create_button(screen, (c1, c2, c3), x, y, length, height, width, text, (text_c1, text_c2, text_c3))
+    obj.create_button(screen, (c1, c2, c3), x, y, length, height, width, text,
+                      (text_c1, text_c2, text_c3))
 
 
 def settings_screen():
@@ -205,7 +232,8 @@ def settings_screen():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 CLICK.play()
                 if event.button == 1:
-                    if exit_button.pressed(pygame.mouse.get_pos()):  # Если нажал на выход, то выходям из функции
+                    # Если нажал на выход, то выходям из функции
+                    if exit_button.pressed(pygame.mouse.get_pos()):
                         return
                     if fullscreen_button.pressed(pygame.mouse.get_pos()):  # Меняем тип окна
                         if fullscreen:
@@ -229,7 +257,8 @@ def settings_screen():
         start_menu_group.draw(screen)
         start_menu_group.update()
         draw_buttons(exit_button, 255, 1, 0, 81, 44, 300, 70, 0, "Назад", 0, 0, 0)
-        draw_buttons(fullscreen_button, 255, 1, 0, 296, 224, 774, 70, 0, "Вкл/Выкл полноэкранный режим", 0, 0, 0)
+        draw_buttons(fullscreen_button, 255, 1, 0, 296, 224, 774, 70, 0,
+                     "Вкл/Выкл полноэкранный режим", 0, 0, 0)
         draw_buttons(level_button, 255, 1, 0, 296, 404, 774, 70, 0, "Уровень: " + level, 0, 0, 0)
         if pygame.mouse.get_focused():
             draw_cursor(*pygame.mouse.get_pos())
@@ -263,11 +292,14 @@ def start_screen():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 CLICK.play()
                 if event.button == 1:
-                    if start_button.pressed(pygame.mouse.get_pos()):  # При нажатии, активируется игра
+                    # При нажатии, активируется игра
+                    if start_button.pressed(pygame.mouse.get_pos()):
                         return
-                    elif settings_button.pressed(pygame.mouse.get_pos()):  # При нажатии запускаем настройки
+                    # При нажатии запускаем настройки
+                    elif settings_button.pressed(pygame.mouse.get_pos()):
                         settings_screen()
-                    elif exit_button.pressed(pygame.mouse.get_pos()):  # При нажатии выходим из приложения
+                    # При нажатии выходим из приложения
+                    elif exit_button.pressed(pygame.mouse.get_pos()):
                         terminate()
         screen.fill(pygame.Color("black"))
         start_menu_group.draw(screen)
@@ -296,7 +328,8 @@ def control_screen():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 CLICK.play()
                 if event.button == 1:
-                    if exit_button.pressed(pygame.mouse.get_pos()):  # Если нажал на выход, то выходим из функции
+                    # Если нажал на выход, то выходим из функции
+                    if exit_button.pressed(pygame.mouse.get_pos()):
                         return
         screen.fill(pygame.Color("black"))
         control_menu_group.draw(screen)
@@ -336,7 +369,8 @@ def end_screen(text, count):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 CLICK.play()
                 if event.button == 1:
-                    if exit_button.pressed(pygame.mouse.get_pos()):  # При нажатии, выходим из приложения
+                    # При нажатии, выходим из приложения
+                    if exit_button.pressed(pygame.mouse.get_pos()):
                         terminate()
         screen.fill(pygame.Color("black"))
         start_menu_group.draw(screen)
@@ -375,7 +409,8 @@ def choice_screen_name():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 CLICK.play()
                 if event.button == 1:
-                    if start_button.pressed(pygame.mouse.get_pos()):  # При нажатии, данные заносятся в БД
+                    # При нажатии, данные заносятся в БД
+                    if start_button.pressed(pygame.mouse.get_pos()):
                         create_database(text[2])
                         name = text[2]
                         return
@@ -386,11 +421,12 @@ def choice_screen_name():
                 else:
                     text[2] += event.unicode
         screen.fill(pygame.Color("black"))
-        try:  # Рисуем кнопки, но если пользователь нажал лишний раз <backspace> то не обращаем внимание на ошибку
+        try:  # Рисуем кнопки
             draw_buttons(name_button, 255, 1, 0, 418, 36, 529, 75, 0, text[0], 255, 204, 0)
             draw_buttons(text_button, 255, 255, 255, 433, 334, 500, 100, 0, text[2], 0, 0, 0)
             draw_buttons(start_button, 255, 1, 0, 418, 656, 529, 75, 0, text[1], 0, 0, 0)
-        except ZeroDivisionError:
+        except ZeroDivisionError:  # но если пользователь нажал лишний раз <backspace>,
+            # то не обращаем внимание на ошибку
             text[2] = " "
         if pygame.mouse.get_focused():
             draw_cursor(*pygame.mouse.get_pos())
@@ -546,7 +582,8 @@ class Backpack(pygame.sprite.Sprite, Board):
                                  (x * self.cell_size + self.left, y * self.cell_size + self.top,
                                   self.cell_size, self.cell_size), 1)
                 if self.data[x][y] is not None:  # Если массив не пустой, то рисую предметы
-                    screen.blit(self.data[x][y], (x * self.cell_size + self.left, y * self.cell_size + self.top))
+                    screen.blit(self.data[x][y],
+                                (x * self.cell_size + self.left, y * self.cell_size + self.top))
 
 
 class People(pygame.sprite.Sprite):
@@ -556,9 +593,11 @@ class People(pygame.sprite.Sprite):
     image_young2_sit1 = pygame.image.load("images/sprites/Молодой2 сидит1.png")
     image_young2_sit2 = pygame.image.load("images/sprites/Молодой2 сидит2.png")
     image_young2_stay = pygame.image.load("images/sprites/Молодой2 стоит.png")
-    image_old1_stay = pygame.transform.flip(pygame.image.load("images/sprites/Дедушка стоит.png"), 1, 0)
+    image_old1_stay = pygame.transform.flip(pygame.image.load("images/sprites/"
+                                                              "Дедушка стоит.png"), 1, 0)
     image_teenager1M_stay = pygame.image.load("images/sprites/Подросток М стоит.png")
-    image_teenager1W_stay = pygame.transform.flip(pygame.image.load("images/sprites/Подросток Ж стоит.png"), 1, 0)
+    image_teenager1W_stay = pygame.transform.flip(pygame.image.load("images/sprites/"
+                                                                    "Подросток Ж стоит.png"), 1, 0)
     image_miniboss_pair1 = pygame.image.load("images/sprites/Пара стоит1.png")
     image_miniboss_pair2 = pygame.image.load("images/sprites/Пара стоит2.png")
 
@@ -635,7 +674,8 @@ class Dialog(pygame.sprite.Sprite):
         font_size = 30
         my_font = pygame.font.Font("font/Roboto-Regular.ttf", font_size)
         my_text = my_font.render(text, 1, (0, 0, 0))
-        surface.blit(my_text, ((x + length / 2) - my_text.get_width() / 2, (y + height / 2) - my_text.get_height() / 2))
+        surface.blit(my_text, ((x + length / 2) - my_text.get_width() / 2,
+                               (y + height / 2) - my_text.get_height() / 2))
         return surface
 
     def print_text(self, text, y):  # 15px <->
@@ -648,7 +688,9 @@ class Player(pygame.sprite.Sprite):
     image_think = pygame.image.load("images/sprites/character_malePerson_think.png")
     image_back = pygame.image.load("images/sprites/character_malePerson_back.png")
     image_interract = pygame.image.load("images/sprites/character_malePerson_interact.png")
-    image_interract_rot = pygame.transform.flip(pygame.image.load("images/sprites/character_malePerson_interact.png"),
+    image_interract_rot = pygame.transform.flip(pygame.image.load("images/sprites/"
+                                                                  "character_malePerson_"
+                                                                  "interact.png"),
                                                 1, 0)
 
     def __init__(self):  # Инициализиирую объёкт класса Player
@@ -661,15 +703,20 @@ class Player(pygame.sprite.Sprite):
         self.frames = [self.image, Player.image_think, Player.image_back, Player.image_interract,
                        Player.image_interract_rot]
         for i in range(6):
-            self.frames_right.append(pygame.image.load(f"images/sprites/character_malePerson_walk{i}.png"))
+            self.frames_right.append(pygame.image.load(f"images/sprites/"
+                                                       f"character_malePerson_walk{i}.png"))
             self.frames_left.append(pygame.transform.flip(pygame.image.load
-                                                          (f"images/sprites/character_malePerson_walk{i}.png"), 1, 0))
+                                                          (f"images/sprites/"
+                                                           f"character_malePerson_"
+                                                           f"walk{i}.png"), 1, 0))
 
         for j in range(4):
-            self.frames_down_right.append(pygame.image.load(f'images/sprites/character_malePerson_crouch{j}.png'))
+            self.frames_down_right.append(pygame.image.load(f'images/sprites/'
+                                                            f'character_malePerson_crouch{j}.png'))
             self.frames_down_left.append(pygame.transform.flip(pygame.image.load
-                                                               (f'images/sprites/character_malePerson_crouch{j}.png'),
-                                                               1, 0))
+                                                               (f'images/sprites/'
+                                                                f'character_malePerson_'
+                                                                f'crouch{j}.png'), 1, 0))
 
         self.rect = self.image.get_rect()
         self.rect.left = 576
@@ -687,7 +734,8 @@ class Player(pygame.sprite.Sprite):
             player.rect.x -= STEP
             for i in wagon_group:
                 if i.type == "cabin" and all(
-                        zombies[num].who == "D" for num in range(len(zombies))) and pygame.sprite.collide_mask(self, i):
+                        zombies[num].who == "D" for num in range(len(zombies))) and \
+                        pygame.sprite.collide_mask(self, i):
                     end_screen("Вы победили", count_time())
                 if i.type == 'cabin' or i.type == "cabin_rot" or (i.type.startswith("prohod") and
                                                                   not flags[int(i.type[-1]) - 1]):
@@ -724,7 +772,8 @@ class Player(pygame.sprite.Sprite):
             return
         elif who == "F":
             for j in people_group:
-                if pygame.sprite.collide_mask(self, j) and (j.type == "young1" or j.type == "young2"):
+                if pygame.sprite.collide_mask(self, j) and \
+                        (j.type == "young1" or j.type == "young2"):
                     prozent += 1
         elif who == "K":
             if self.last == "R":
@@ -769,11 +818,15 @@ class Zombie(pygame.sprite.Sprite):
         self.frames_right = []
         self.frames_kick = []
         for i in range(6):
-            self.frames_right.append(pygame.image.load(f"images/zombie/character_zombie_walk{i}.png"))
+            self.frames_right.append(pygame.image.load(f"images/zombie/"
+                                                       f"character_zombie_walk{i}.png"))
             self.frames_left.append(pygame.transform.flip(pygame.image.load
-                                                          (f"images/zombie/character_zombie_walk{i}.png"), 1, 0))
+                                                          (f"images/zombie/"
+                                                           f"character_zombie_walk{i}.png"),
+                                                          1, 0))
         for i in range(3):
-            self.frames_kick.append(pygame.image.load(f"images/zombie/character_zombie_attack{i}.png"))
+            self.frames_kick.append(pygame.image.load(f"images/zombie/"
+                                                      f"character_zombie_attack{i}.png"))
         self.rect = self.image.get_rect()
         self.rect.left = left
         self.rect.top = top
@@ -850,7 +903,8 @@ class Button:
         font_size = int(length // len(text))
         my_font = pygame.font.Font("font/Roboto-Black.ttf", font_size)
         my_text = my_font.render(text, 1, text_color)
-        surface.blit(my_text, ((x + length / 2) - my_text.get_width() / 2, (y + height / 2) - my_text.get_height() / 2))
+        surface.blit(my_text, ((x + length / 2) - my_text.get_width() / 2,
+                               (y + height / 2) - my_text.get_height() / 2))
         return surface
 
     def draw_button(self, surface, color, length, height, x, y, width):
@@ -868,8 +922,8 @@ class Button:
         return surface
 
     def pressed(self, mouse):
-        if self.rect.topleft[0] < mouse[0] < self.rect.bottomright[0] and self.rect.topleft[1] < mouse[1] < \
-                self.rect.bottomright[1]:
+        if self.rect.topleft[0] < mouse[0] < self.rect.bottomright[0] and \
+                self.rect.topleft[1] < mouse[1] < self.rect.bottomright[1]:
             return True
         return False
 
@@ -913,17 +967,19 @@ if __name__ == '__main__':
     player = Player()
     cur_text = "Мне нужно дойти до кабинки машиниста любой ценой!"
     cur_text2 = "(До того, как поезд доедет до последней станции)"
-    people = [People("young1", -333, 306), People("young2", -4192, 306), People("oldman1", -6865, 340),
-              People("teenagerM1", -27469, 340), People("teenagerW1", -23189, 340), People("minibosspair", -15821, 340)]
+    people = [People("young1", -333, 306), People("young2", -4192, 306),
+              People("oldman1", -6865, 340), People("teenagerM1", -27469, 340),
+              People("teenagerW1", -23189, 340), People("minibosspair", -15821, 340)]
     if level == "Лёгкий":
-        zombies = [Zombie(-3773, 498, 0), Zombie(-8513, 498, 1), Zombie(-13252, 498, 2), Zombie(-17991, 498, 3),
-                   Zombie(-22730, 498, 4)]
+        zombies = [Zombie(-3773, 498, 0), Zombie(-8513, 498, 1), Zombie(-13252, 498, 2),
+                   Zombie(-17991, 498, 3), Zombie(-22730, 498, 4)]
     else:
         zombies = [Zombie(-3773, 498, 0), Zombie(-8513, 498, 1), Zombie(-13252, 498, 2)]
     wagons = [Wagon("cabin", -32749, 68), Wagon("wagon1", -32208, 68), Wagon("prohod1", -27612, 68),
               Wagon("wagon2", -27469, 68), Wagon("prohod2", -22873, 68), Wagon("wagon3", -22730, 68),
-              Wagon("prohod3", -18134, 68), Wagon("wagon4", -17991, 68), Wagon("prohod4", -13395, 68),
-              Wagon("wagon5", -13252, 68), Wagon("prohod5", -8656, 68), Wagon("wagon6", -8513, 68),
+              Wagon("prohod3", -18134, 68), Wagon("wagon4", -17991, 68),
+              Wagon("prohod4", -13395, 68), Wagon("wagon5", -13252, 68),
+              Wagon("prohod5", -8656, 68), Wagon("wagon6", -8513, 68),
               Wagon("prohod6", -3917, 68), Wagon("wagon7", -3773, 68), Wagon("cabin_rot", 823, 68)]
 
     backpack = Backpack()
@@ -1023,7 +1079,8 @@ if __name__ == '__main__':
         for num in range(len(zombies)):
             zombies[num].update()
         if all(zombies[num].who == "D" for num in range(len(zombies))) or any(
-                i.type.startswith("prohod") and pygame.sprite.collide_mask(player, i) for i in wagon_group):
+                i.type.startswith("prohod") and
+                pygame.sprite.collide_mask(player, i) for i in wagon_group):
             flags = [True, True, True, True, True, True]
         else:
             flags = [False, False, False, False, False, False]
@@ -1033,7 +1090,8 @@ if __name__ == '__main__':
         if menu:
             draw_buttons(fon_menu, 255, 1, 0, 433, 34, 500, 700, 0, " ", 255, 1, 0)
             draw_buttons(menu_button, 255, 204, 0, 558, 59, 250, 60, 0, menu_text[0], 255, 1, 0)
-            draw_buttons(time_button, 255, 255, 255, 518, 150, 330, 100, 0, menu_text[1] + str(count_time()), 0, 0, 0)
+            draw_buttons(time_button, 255, 255, 255, 518, 150, 330, 100, 0,
+                         menu_text[1] + str(count_time()), 0, 0, 0)
             draw_buttons(control_button, 255, 255, 255, 520, 341, 330, 60, 0, menu_text[2], 0, 0, 0)
             draw_buttons(back_button, 255, 255, 255, 519, 461, 330, 60, 0, menu_text[3], 0, 0, 0)
             draw_buttons(exit_button, 255, 255, 255, 518, 649, 330, 60, 0, menu_text[4], 0, 0, 0)
