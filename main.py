@@ -13,7 +13,7 @@ WIDTH = 1366  # Ширина приложения
 HEIGHT = 768  # Высота приложения
 STEP = 50  # Скорость главного героя
 level = "Лёгкий"  # Уровень (Лёгкий, Средний, Сложный)
-TIMEBETWEENSTATIONS = 150000  # Время между станцииями
+TIME_BETWEEN_STATIONS = 150000  # Время между станцииями
 CURSOR = pygame.image.load("images/icons/cursor.png")  # Изображение курсора
 CLICK = pygame.mixer.Sound("sounds/click.ogg")  # Звук клика
 STATIONS_SOUNDS = []  # Массив из звуков станций
@@ -182,7 +182,7 @@ def load_image(name, color_key=None):
     image = image.convert_alpha()
 
     if color_key is not None:
-        if color_key is -1:
+        if color_key == -1:
             color_key = image.get_at((0, 0))
         image.set_colorkey(color_key)
     return image
@@ -217,7 +217,7 @@ def draw_buttons(obj, c1, c2, c3, x, y, length, height, width, text, text_c1, te
 
 def settings_screen():
     """Окно настроек"""
-    global screen, fullscreen, level, TIMEBETWEENSTATIONS
+    global screen, fullscreen, level, TIME_BETWEEN_STATIONS
     # Создаю переменные с объектом Button
     exit_button = Button()
     fullscreen_button = Button()
@@ -244,13 +244,13 @@ def settings_screen():
                             fullscreen = True
                     if level_button.pressed(pygame.mouse.get_pos()):  # Меняем уровень сложности
                         if level == "Лёгкий":
-                            TIMEBETWEENSTATIONS = 100000
+                            TIME_BETWEEN_STATIONS = 100000
                             level = "Средний"
                         elif level == "Средний":
-                            TIMEBETWEENSTATIONS = 50000
+                            TIME_BETWEEN_STATIONS = 50000
                             level = "Сложный"
                         elif level == 'Сложный':
-                            TIMEBETWEENSTATIONS = 150000
+                            TIME_BETWEEN_STATIONS = 150000
                             level = "Лёгкий"
 
         screen.fill(pygame.Color("black"))
@@ -727,7 +727,7 @@ class Player(pygame.sprite.Sprite):
         self.x = 0
 
     def update(self, *args):  # В зависимости от нажатой кнопки, меняются спрайты
-        global prozent
+        global percent
         who = args[0]
         if who == "L":
             self.cur_frame = (self.cur_frame + 1) % len(self.frames_left)
@@ -739,7 +739,7 @@ class Player(pygame.sprite.Sprite):
                         zombies[num].who == "D" for num in range(len(zombies))) and \
                         pygame.sprite.collide_mask(self, i):
                     end_screen("Вы победили", count_time())
-                if i.type == 'cabin' or i.type == "cabin_rot" or (i.type.startswith("prohod") and
+                if i.type == 'cabin' or i.type == "cabin_rot" or (level == 'Сложный' and i.type.startswith("prohod") and
                                                                   not flags[int(i.type[-1]) - 1]):
                     if pygame.sprite.collide_mask(self, i):
                         self.image = self.frames[1]
@@ -779,7 +779,7 @@ class Player(pygame.sprite.Sprite):
             for j in people_group:
                 if pygame.sprite.collide_mask(self, j) and \
                         (j.type == "young1" or j.type == "young2"):
-                    prozent += 1
+                    percent += 1
         elif who == "K":
             if self.last == "R":
                 self.image = self.frames[3]
@@ -845,7 +845,7 @@ class Zombie(pygame.sprite.Sprite):
         self.dead = False
 
     def update(self):  # В заивсимости от пути Зомби, меняются спрайты
-        global prozent
+        global percent
         if self.who == "L":
             self.cur_frame = (self.cur_frame + 1) % len(self.frames_left)
             self.image = self.frames_left[self.cur_frame]
@@ -855,7 +855,7 @@ class Zombie(pygame.sprite.Sprite):
                     self.cur_frame_kick = (self.cur_frame_kick + 1) % len(self.frames_kick)
                     self.image = self.frames_kick[self.cur_frame_kick]
                     zombies[self.num].rect.x += self.step
-                    prozent -= 1
+                    percent -= 1
                     break
             for i in wagon_group:
                 if i.type == "cabin" and pygame.sprite.collide_mask(self, i):
@@ -869,7 +869,7 @@ class Zombie(pygame.sprite.Sprite):
                     self.cur_frame_kick = (self.cur_frame_kick + 1) % len(self.frames_kick)
                     self.image = self.frames_kick[self.cur_frame_kick]
                     zombies[self.num].rect.x -= self.step
-                    prozent -= 1
+                    percent -= 1
                     break
             for i in wagon_group:
                 if i.type == "cabin_rot" and pygame.sprite.collide_mask(self, i):
@@ -999,8 +999,8 @@ if __name__ == '__main__':
     moods = os.listdir("images/mood/")
     for i in range(len(moods)):
         moods_dict[moods[i][4:-4]] = moods[i]
-    prozent = 60
-    cur_mood = Mood(moods_dict[str(prozent)])
+    percent = 60
+    cur_mood = Mood(moods_dict[str(percent)])
 
     fon_wagon_list = list()
     directory = "images/fons/Fon_Kommunarka/"
@@ -1014,7 +1014,7 @@ if __name__ == '__main__':
     # pygame.mixer_music.play(-1)
     running = True
     start = time.monotonic()
-    pygame.time.set_timer(pygame.USEREVENT, TIMEBETWEENSTATIONS)
+    pygame.time.set_timer(pygame.USEREVENT, TIME_BETWEEN_STATIONS)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -1126,11 +1126,11 @@ if __name__ == '__main__':
         elif not map.opened:
             map.update("images/icons/map_icon.png", 1238, 0)
 
-        if prozent == 0:
+        if percent == 0:
             cur_mood.update(moods_dict["0"])
             end_screen("Вы проиграли", str(count_time()))
-        elif 5 <= prozent <= 100 and prozent % 5 == 0:
-            cur_mood.update(moods_dict[str(prozent)])
+        elif 5 <= percent <= 100 and percent % 5 == 0:
+            cur_mood.update(moods_dict[str(percent)])
 
         pygame.display.flip()
         clock.tick(FPS)
